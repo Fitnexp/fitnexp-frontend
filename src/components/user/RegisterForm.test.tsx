@@ -38,6 +38,18 @@ const fillFormFields = async (
     });
 };
 
+const testErrorMessage = async (
+    email: string,
+    username: string,
+    password: string,
+    confirmPassword: string,
+    expectedMessage: string,
+) => {
+    renderRegisterForm();
+    await fillFormFields(email, username, password, confirmPassword);
+    expect(screen.getByText(expectedMessage)).toBeInTheDocument();
+};
+
 describe('RegisterForm', () => {
     describe('when the form is rendered', () => {
         it('make sure that all fields are present', () => {
@@ -86,74 +98,61 @@ describe('RegisterForm', () => {
 
     describe('when the email is invalid', () => {
         it('displays an error message', async () => {
-            renderRegisterForm();
-            await fillFormFields(
+            await testErrorMessage(
                 'testexample.com',
                 'testuser',
                 'passwordpassword123',
                 'passwordpassword123',
+                'Invalid email',
             );
-            expect(screen.getByText('Invalid email')).toBeInTheDocument();
         });
     });
 
     describe('when the username is longer than 16 characters', () => {
         it('displays an error message', async () => {
-            renderRegisterForm();
-            await fillFormFields(
-                'testexample.com',
+            await testErrorMessage(
+                'test@example.com',
                 'testutestusertestusertes',
                 'passwordpassword123',
                 'passwordpassword123',
+                'Username must be less than 17 characters',
             );
-            expect(
-                screen.getByText('Username must be less than 17 characters'),
-            ).toBeInTheDocument();
         });
     });
 
     describe('when the password is shorter than 12 characters', () => {
         it('displays an error message', async () => {
-            renderRegisterForm();
-            await fillFormFields(
-                'testexample.com',
+            await testErrorMessage(
+                'test@example.com',
                 'testutestuser',
                 'passwo',
                 'passwordpassword123',
+                'Password must be at least 12 characters',
             );
-            expect(
-                screen.getByText('Password must be at least 12 characters'),
-            ).toBeInTheDocument();
         });
     });
 
     describe('when the password is longer than 32 characters', () => {
         it('displays an error message', async () => {
-            renderRegisterForm();
-            await fillFormFields(
-                'testexample.com',
+            await testErrorMessage(
+                'test@example.com',
                 'testutestuser',
                 'passwordpassword123passwordpassword123',
                 'passwordpassword123',
+                'Password must be less than 33 characters',
             );
-            expect(
-                screen.getByText('Password must be less than 33 characters'),
-            ).toBeInTheDocument();
         });
     });
 
     describe('when the passwords do not match', () => {
         it('displays an error message', async () => {
-            renderRegisterForm();
-            await fillFormFields(
+            await testErrorMessage(
                 'test@example.com',
                 'testuser',
                 'passwordpassword123',
                 'passwordpassword456',
+                'Both passwords must be equal',
             );
-            expect(
-                screen.getByText('Both passwords must be equal'),
-            ).toBeInTheDocument();
         });
     });
 
