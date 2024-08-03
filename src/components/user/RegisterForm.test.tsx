@@ -38,18 +38,6 @@ const fillFormFields = async (
     });
 };
 
-const testErrorMessage = async (
-    email: string,
-    username: string,
-    password: string,
-    confirmPassword: string,
-    expectedMessage: string,
-) => {
-    renderRegisterForm();
-    await fillFormFields(email, username, password, confirmPassword);
-    expect(screen.getByText(expectedMessage)).toBeInTheDocument();
-};
-
 describe('RegisterForm', () => {
     describe('when the form is rendered', () => {
         it('make sure that all fields are present', () => {
@@ -96,63 +84,71 @@ describe('RegisterForm', () => {
         });
     });
 
-    describe('when the email is invalid', () => {
-        it('displays an error message', async () => {
-            await testErrorMessage(
-                'testexample.com',
-                'testuser',
-                'passwordpassword123',
-                'passwordpassword123',
-                'Invalid email',
-            );
-        });
-    });
+    const errorCases = [
+        {
+            description: 'when the email is invalid',
+            data: {
+                email: 'testexample.com',
+                username: 'testuser',
+                password: 'passwordpassword123',
+                confirmPassword: 'passwordpassword123',
+            },
+            expectedMessage: 'Invalid email',
+        },
+        {
+            description: 'when the username is longer than 16 characters',
+            data: {
+                email: 'test@example.com',
+                username: 'testutestusertestusertes',
+                password: 'passwordpassword123',
+                confirmPassword: 'passwordpassword123',
+            },
+            expectedMessage: 'Username must be less than 17 characters',
+        },
+        {
+            description: 'when the password is shorter than 12 characters',
+            data: {
+                email: 'test@example.com',
+                username: 'testutestuser',
+                password: 'passwo',
+                confirmPassword: 'passwordpassword123',
+            },
+            expectedMessage: 'Password must be at least 12 characters',
+        },
+        {
+            description: 'when the password is longer than 32 characters',
+            data: {
+                email: 'test@example.com',
+                username: 'testutestuser',
+                password: 'passwordpassword123passwordpassword123',
+                confirmPassword: 'passwordpassword123',
+            },
+            expectedMessage: 'Password must be less than 33 characters',
+        },
+        {
+            description: 'when the passwords do not match',
+            data: {
+                email: 'test@example.com',
+                username: 'testuser',
+                password: 'passwordpassword123',
+                confirmPassword: 'passwordpassword456',
+            },
+            expectedMessage: 'Both passwords must be equal',
+        },
+    ];
 
-    describe('when the username is longer than 16 characters', () => {
-        it('displays an error message', async () => {
-            await testErrorMessage(
-                'test@example.com',
-                'testutestusertestusertes',
-                'passwordpassword123',
-                'passwordpassword123',
-                'Username must be less than 17 characters',
-            );
-        });
-    });
-
-    describe('when the password is shorter than 12 characters', () => {
-        it('displays an error message', async () => {
-            await testErrorMessage(
-                'test@example.com',
-                'testutestuser',
-                'passwo',
-                'passwordpassword123',
-                'Password must be at least 12 characters',
-            );
-        });
-    });
-
-    describe('when the password is longer than 32 characters', () => {
-        it('displays an error message', async () => {
-            await testErrorMessage(
-                'test@example.com',
-                'testutestuser',
-                'passwordpassword123passwordpassword123',
-                'passwordpassword123',
-                'Password must be less than 33 characters',
-            );
-        });
-    });
-
-    describe('when the passwords do not match', () => {
-        it('displays an error message', async () => {
-            await testErrorMessage(
-                'test@example.com',
-                'testuser',
-                'passwordpassword123',
-                'passwordpassword456',
-                'Both passwords must be equal',
-            );
+    errorCases.forEach(({ description, data, expectedMessage }) => {
+        describe(description, () => {
+            it('displays an error message', async () => {
+                renderRegisterForm();
+                await fillFormFields(
+                    data.email,
+                    data.username,
+                    data.password,
+                    data.confirmPassword,
+                );
+                expect(screen.getByText(expectedMessage)).toBeInTheDocument();
+            });
         });
     });
 
