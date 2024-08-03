@@ -16,13 +16,14 @@ export default defineConfig({
         setupFiles: ['./vitest.setup.ts'],
         coverage: {
             provider: 'istanbul',
-            reporter: ['lcov'],
+            reporter: ['lcov', 'text'],
             exclude: [
                 'src/main.tsx',
                 'tailwind.config.js',
                 '.eslintrc.cjs',
                 'src/components/ui/**',
                 'dist',
+                '**/*.test.tsx',
             ],
         },
     },
