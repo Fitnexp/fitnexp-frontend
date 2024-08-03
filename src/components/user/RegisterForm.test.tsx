@@ -7,6 +7,13 @@ import axios from 'axios';
 
 const mock = new MockAdapter(axios);
 
+const userData = {
+    email: 'test@example.com',
+    username: 'testuser',
+    password: 'password123password123',
+    confirmPassword: 'password123password123',
+};
+
 const renderRegisterForm = () => {
     render(
         <Router>
@@ -20,7 +27,10 @@ const fillFormFields = async (
     username: string,
     password: string,
     confirmPassword: string,
+    expectedError?: string,
 ) => {
+    renderRegisterForm();
+
     const emailInput = screen.getByLabelText('Email');
     const usernameInput = screen.getByLabelText('Username');
     const passwordInput = screen.getByLabelText('Password');
@@ -36,6 +46,10 @@ const fillFormFields = async (
         });
         fireEvent.click(submitButton);
     });
+
+    if (expectedError) {
+        expect(screen.getByText(expectedError)).toBeInTheDocument();
+    }
 };
 
 describe('RegisterForm', () => {
@@ -77,7 +91,6 @@ describe('RegisterForm', () => {
 
         errorCases.forEach(({ description, message }) => {
             it(description, async () => {
-                renderRegisterForm();
                 await fillFormFields('', '', '', '');
                 expect(screen.getByText(message)).toBeInTheDocument();
             });
@@ -87,67 +100,48 @@ describe('RegisterForm', () => {
     const errorCases = [
         {
             description: 'when the email is invalid',
-            data: {
-                email: 'testexample.com',
-                username: 'testuser',
-                password: 'passwordpassword123',
-                confirmPassword: 'passwordpassword123',
-            },
+            userData: { ...userData, email: 'test' },
             expectedMessage: 'Invalid email',
         },
         {
             description: 'when the username is longer than 16 characters',
-            data: {
-                email: 'test@example.com',
-                username: 'testutestusertestusertes',
-                password: 'passwordpassword123',
-                confirmPassword: 'passwordpassword123',
-            },
+            userData: { ...userData, username: 'testutestusertestusertes' },
             expectedMessage: 'Username must be less than 17 characters',
         },
         {
             description: 'when the password is shorter than 12 characters',
-            data: {
-                email: 'test@example.com',
-                username: 'testutestuser',
-                password: 'passwo',
-                confirmPassword: 'passwordpassword123',
-            },
+            userData: { ...userData, password: 'passwo' },
             expectedMessage: 'Password must be at least 12 characters',
         },
         {
             description: 'when the password is longer than 32 characters',
-            data: {
-                email: 'test@example.com',
-                username: 'testutestuser',
+            userData: {
+                ...userData,
                 password: 'passwordpassword123passwordpassword123',
-                confirmPassword: 'passwordpassword123',
             },
             expectedMessage: 'Password must be less than 33 characters',
         },
         {
             description: 'when the passwords do not match',
-            data: {
-                email: 'test@example.com',
-                username: 'testuser',
-                password: 'passwordpassword123',
+            userData: {
+                ...userData,
                 confirmPassword: 'passwordpassword456',
             },
+
             expectedMessage: 'Both passwords must be equal',
         },
     ];
 
-    errorCases.forEach(({ description, data, expectedMessage }) => {
+    errorCases.forEach(({ description, userData, expectedMessage }) => {
         describe(description, () => {
             it('displays an error message', async () => {
-                renderRegisterForm();
                 await fillFormFields(
-                    data.email,
-                    data.username,
-                    data.password,
-                    data.confirmPassword,
+                    userData.email,
+                    userData.username,
+                    userData.password,
+                    userData.confirmPassword,
+                    expectedMessage,
                 );
-                expect(screen.getByText(expectedMessage)).toBeInTheDocument();
             });
         });
     });
@@ -172,26 +166,17 @@ describe('RegisterForm', () => {
 
         errorCases.forEach(({ description, errorResponse, expectedError }) => {
             it(description, async () => {
-                const userData = {
-                    email: 'test@example.com',
-                    username: 'testuser',
-                    password: 'password123password123',
-                    confirmPassword: 'password123password123',
-                };
-
                 mock.onPost(
                     `${import.meta.env.VITE_SERVER_URI}/api/register`,
                     userData,
                 ).reply(400, errorResponse);
 
-                renderRegisterForm();
                 await fillFormFields(
                     userData.email,
                     userData.username,
                     userData.password,
                     userData.confirmPassword,
                 );
-
                 expect(screen.getByText(expectedError)).toBeInTheDocument();
             });
         });
@@ -213,7 +198,6 @@ describe('RegisterForm', () => {
                 message: 'User created successfully',
             });
 
-            renderRegisterForm();
             await fillFormFields(
                 userData.email,
                 userData.username,
