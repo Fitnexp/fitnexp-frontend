@@ -25,7 +25,7 @@ describe('Register', () => {
                 name: 'Create an account in a few steps',
             });
             const loginButton = screen.getByRole('link', {
-                name: 'Login',
+                name: 'Log in',
             });
 
             expect(signUpHeading).toBeInTheDocument();
@@ -38,7 +38,7 @@ describe('Register', () => {
             renderRegister();
 
             const loginButton = screen.getByRole('link', {
-                name: 'Login',
+                name: 'Log in',
             });
 
             loginButton.click();

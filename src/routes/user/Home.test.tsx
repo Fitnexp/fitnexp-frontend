@@ -11,17 +11,26 @@ const renderHome = () => {
     );
 };
 
-describe('Register', () => {
+describe('Home', () => {
     describe('when the Home page is rendered', () => {
         it('make sure that all elements are present', () => {
             renderHome();
 
-            const placeholder = screen.getByRole('heading', {
+            const logInHeading = screen.getByRole('heading', {
                 level: 1,
-                name: 'This is a test project',
+                name: 'Log In',
+            });
+            const logInSubHeading = screen.getByRole('heading', {
+                level: 2,
+                name: 'Enter your email below to log in to your account',
+            });
+            const signUpButton = screen.getByRole('link', {
+                name: 'Sign up',
             });
 
-            expect(placeholder).toBeInTheDocument();
+            expect(logInHeading).toBeInTheDocument();
+            expect(logInSubHeading).toBeInTheDocument();
+            expect(signUpButton).toBeInTheDocument();
         });
     });
 });

@@ -11,7 +11,7 @@ const renderLayoutAuthentication = () => {
     );
 };
 
-describe('Register', () => {
+describe('LayoutAuthetication', () => {
     describe('when the LayoutAuthetication page is rendered', () => {
         it('make sure that the image is present', () => {
             renderLayoutAuthentication();
