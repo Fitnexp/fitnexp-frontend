@@ -19,7 +19,7 @@ function Register() {
             <div className="mt-4 text-center text-sm">
                 Have an account?{' '}
                 <Link to=".." className="underline">
-                    Login
+                    Log in
                 </Link>
             </div>
         </>
