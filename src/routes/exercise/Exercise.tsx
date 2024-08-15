@@ -21,8 +21,7 @@ function Exercise() {
                 setExercises(res.data.exercises);
                 setFilteredExercises(res.data.exercises);
             })
-            .then(() => setLoading(false))
-            .catch(() => console.error('Error fetching exercises'));
+            .then(() => setLoading(false));
     }, []);
 
     function listSkeletons() {

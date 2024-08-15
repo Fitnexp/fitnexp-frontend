@@ -29,10 +29,7 @@ function LogOutNavItem({ text }: { readonly text: string }) {
                     withCredentials: true,
                 },
             )
-            .then(() => navigate('/'))
-            .catch((err) => {
-                console.error(err);
-            });
+            .then(() => navigate('/'));
     };
 
     return (
@@ -66,10 +63,10 @@ function UsualNavItem({
 }
 
 function NavItem({
-    link = '',
+    link,
     text,
 }: {
-    readonly link?: string;
+    readonly link: string;
     readonly text: string;
 }) {
     if (text === 'Log Out') {

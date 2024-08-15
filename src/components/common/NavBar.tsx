@@ -15,17 +15,20 @@ function NavBar({ username }: { readonly username: string }) {
                 <NavItem link="/profile" text={username} />
                 <NavItem link="/workouts" text="Workouts" />
                 <NavItem link="/exercises" text="Exercises" />
-                <NavItem text="Log Out" />
+                <NavItem link="/" text="Log Out" />
             </nav>
 
             <nav className="sticky left-0 top-0 z-50 hidden h-full w-full items-center justify-between bg-white md:flex xl:hidden">
                 <NavItem link="/profile" text={username} />
                 <NavItem link="/workouts" text="Workouts" />
                 <NavItem link="/exercises" text="Exercises" />
-                <NavItem text="Log Out" />
+                <NavItem link="/" text="Log Out" />
             </nav>
 
-            <div className="fixed right-4 top-4 z-50 flex items-center justify-center rounded-md border bg-white p-2 md:hidden">
+            <div
+                id="drawer"
+                className="fixed right-4 top-4 z-50 flex items-center justify-center rounded-md border bg-white p-2 md:hidden"
+            >
                 <Drawer>
                     <DrawerTrigger>
                         <AlignJustify></AlignJustify>
@@ -36,7 +39,7 @@ function NavBar({ username }: { readonly username: string }) {
                         <NavItem link="/profile" text={username} />
                         <NavItem link="/workouts" text="Workouts" />
                         <NavItem link="/exercises" text="Exercises" />
-                        <NavItem text="Log Out" />
+                        <NavItem link="/" text="Log Out" />
                     </DrawerContent>
                 </Drawer>
             </div>
