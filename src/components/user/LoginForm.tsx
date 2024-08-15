@@ -36,7 +36,7 @@ function LoginForm() {
             .post(`${import.meta.env.VITE_SERVER_URI}/api/login`, values, {
                 withCredentials: true,
             })
-            .then(() => navigate('/protected'))
+            .then(() => navigate('/workouts'))
             .catch((err) => {
                 setError(Object.values(err.response.data.errors)[0] as string);
             });

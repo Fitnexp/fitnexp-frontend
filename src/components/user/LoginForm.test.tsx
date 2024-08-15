@@ -139,7 +139,7 @@ describe('LoginForm', () => {
             await fillFormFields(userData.email, userData.password);
 
             await waitFor(() => {
-                expect(window.location.pathname).toBe('/protected');
+                expect(window.location.pathname).toBe('/workouts');
             });
         });
     });
