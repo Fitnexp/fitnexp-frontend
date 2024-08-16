@@ -32,7 +32,7 @@ function ExerciseCard({
                     <h2 className="text-xl">
                         {primaryMuscles.map((muscle, index) => (
                             <span
-                                key={index}
+                                key={crypto.randomUUID()}
                                 className="font-bold text-red-600"
                             >
                                 {muscle}

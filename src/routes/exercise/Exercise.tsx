@@ -27,8 +27,11 @@ function Exercise() {
     function listSkeletons() {
         return new Array(10)
             .fill(0)
-            .map((_, index) => (
-                <Skeleton key={index} className="my-4 h-32 w-full" />
+            .map(() => (
+                <Skeleton
+                    key={crypto.randomUUID()}
+                    className="my-4 h-32 w-full"
+                />
             ));
     }
 
