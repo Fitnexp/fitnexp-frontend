@@ -24,6 +24,7 @@ export default defineConfig({
                 'src/components/ui/**',
                 'dist',
                 '**/*.test.tsx',
+                'src/components/common/SecurityGate.tsx',
             ],
         },
     },

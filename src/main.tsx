@@ -3,8 +3,11 @@ import ReactDOM from 'react-dom/client';
 import Home from './routes/user/Home.tsx';
 import Register from './routes/user/Register.tsx';
 import LayoutAuthentication from './routes/user/LayoutAuthentication.tsx';
+import SecurityGate from './components/common/SecurityGate.tsx';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import LayoutNavBar from './components/common/LayoutNavBar.tsx';
+import Exercise from '@/routes/exercise/Exercise.tsx';
 
 const router = createBrowserRouter([
     {
@@ -18,6 +21,22 @@ const router = createBrowserRouter([
             {
                 path: '/sign-up',
                 element: <Register />,
+            },
+        ],
+    },
+    {
+        path: '/',
+        element: <SecurityGate children={<LayoutNavBar username={''} />} />,
+        children: [
+            {
+                path: '/exercises',
+                element: <Exercise />,
+            },
+            {
+                path: '/workouts',
+            },
+            {
+                path: '/profile',
             },
         ],
     },
