@@ -8,6 +8,7 @@ import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import LayoutNavBar from './components/common/LayoutNavBar.tsx';
 import Exercise from '@/routes/exercise/Exercise.tsx';
+import Workout from '@/routes/workout/Workout.tsx';
 
 const router = createBrowserRouter([
     {
@@ -34,6 +35,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/workouts',
+                element: <Workout />,
             },
             {
                 path: '/profile',
