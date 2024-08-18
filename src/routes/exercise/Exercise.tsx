@@ -13,6 +13,8 @@ function Exercise() {
     let timeout: NodeJS.Timeout;
 
     useEffect(() => {
+        document.title = 'Fitnexp - Exercises';
+
         axios
             .get(`${import.meta.env.VITE_SERVER_URI}/api/exercises`, {
                 withCredentials: true,
@@ -63,6 +65,7 @@ function Exercise() {
                 icon={<Book size={48} />}
                 title={'Exercises'}
                 onChange={onChange}
+                placeholder={'Push Up'}
             />
             {loading ? listSkeletons() : listExercises(filteredExercises)}
         </div>

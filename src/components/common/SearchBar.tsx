@@ -14,7 +14,7 @@ function SearchBar({
                 name="search"
                 onChange={onChange}
                 placeholder={placeholder}
-                className="w-full rounded-full border border-gray-300 p-2 pl-10"
+                className="w-full rounded-full border border-black p-2 pl-10"
             ></input>
         </div>
     );
