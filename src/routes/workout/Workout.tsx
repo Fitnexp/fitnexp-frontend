@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import IWorkout from '@/interfaces/workoutInterface';
 import WorkoutCard from '@/components/workout/WorkoutCard';
+import { Skeleton } from '@/components/ui/skeleton';
 
 function Workout() {
     const [loading, setLoading] = useState(true);
@@ -12,6 +13,8 @@ function Workout() {
     let timeout: NodeJS.Timeout;
 
     useEffect(() => {
+        document.title = 'Fitnexp - Workouts';
+
         axios
             .get(`${import.meta.env.VITE_SERVER_URI}/api/workouts`, {
                 withCredentials: true,
@@ -38,6 +41,45 @@ function Workout() {
             setFilteredWorkouts(filtered);
         }, 300);
     };
+
+    function listSkeletons() {
+        const rows = [];
+        for (let i = 0; i < 10; i++) {
+            rows.push(
+                <tr className="hidden md:table-row" key={crypto.randomUUID()}>
+                    <td className="h-full w-1/2 p-2">
+                        <Skeleton
+                            key={crypto.randomUUID()}
+                            className="h-40 w-full"
+                        />
+                    </td>
+                    <td className="h-full w-full p-2">
+                        <Skeleton
+                            key={crypto.randomUUID()}
+                            className="h-40 w-full"
+                        />
+                    </td>
+                </tr>,
+            );
+        }
+        for (let i = 0; i < 10; i++) {
+            rows.push(
+                <tr className="table-row md:hidden" key={crypto.randomUUID()}>
+                    <td className="h-full w-full p-2">
+                        <Skeleton
+                            key={crypto.randomUUID()}
+                            className="h-40 w-full"
+                        />
+                    </td>
+                </tr>,
+            );
+        }
+        return (
+            <table className="mx-1 my-4 h-full w-full">
+                <tbody>{rows}</tbody>
+            </table>
+        );
+    }
 
     function listWorkouts(workouts: IWorkout[]) {
         const rows = [];
@@ -87,7 +129,7 @@ function Workout() {
                 onChange={onChange}
                 placeholder={'Core Strength'}
             />
-            {loading ? 'Loading...' : listWorkouts(filteredWorkouts)}
+            {loading ? listSkeletons() : listWorkouts(filteredWorkouts)}
         </div>
     );
 }
