@@ -10,8 +10,38 @@ import { BrowserRouter } from 'react-router-dom';
 import Workout from './Workout';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
+import { IExercise } from '@/interfaces/exerciseInterface';
 
 const mock = new MockAdapter(axios);
+
+function createExercise(exercise: IExercise) {
+    const {
+        _id,
+        name,
+        force,
+        level,
+        mechanic,
+        equipment,
+        primaryMuscles,
+        secondaryMuscles,
+        instructions,
+        category,
+        photo,
+    } = exercise;
+    return {
+        _id,
+        name,
+        force,
+        level,
+        mechanic,
+        equipment,
+        primaryMuscles,
+        secondaryMuscles,
+        instructions,
+        category,
+        photo,
+    };
+}
 
 const workouts = [
     {
@@ -19,7 +49,8 @@ const workouts = [
         name: 'Shoulders Sunday',
         description: 'Shoulder workout for Sunday',
         exercises: [
-            {
+            createExercise({
+                _id: '1',
                 name: 'Ab Roller',
                 force: 'pull',
                 level: 'intermediate',
@@ -35,8 +66,9 @@ const workouts = [
                 ],
                 category: 'strength',
                 photo: '',
-            },
-            {
+            }),
+            createExercise({
+                _id: '2',
                 name: 'Alternating Cable Shoulder Press',
                 force: 'push',
                 level: 'beginner',
@@ -52,8 +84,9 @@ const workouts = [
                 ],
                 category: 'strength',
                 photo: '',
-            },
-            {
+            }),
+            createExercise({
+                _id: '3',
                 name: 'Alternating Kettlebell Press',
                 force: 'push',
                 level: 'intermediate',
@@ -68,7 +101,7 @@ const workouts = [
                 ],
                 category: 'strength',
                 photo: '',
-            },
+            }),
         ],
     },
     {
@@ -77,7 +110,8 @@ const workouts = [
         description:
             'A beginner-friendly workout to strengthen the core muscles.',
         exercises: [
-            {
+            createExercise({
+                _id: '4',
                 name: '3/4 Sit-Up',
                 force: 'pull',
                 level: 'beginner',
@@ -94,8 +128,9 @@ const workouts = [
                 ],
                 category: 'strength',
                 photo: '',
-            },
-            {
+            }),
+            createExercise({
+                _id: '5',
                 name: 'Ab Crunch Machine',
                 force: 'pull',
                 level: 'intermediate',
@@ -111,8 +146,9 @@ const workouts = [
                 ],
                 category: 'strength',
                 photo: '',
-            },
-            {
+            }),
+            createExercise({
+                _id: '6',
                 name: 'Air Bike',
                 force: 'pull',
                 level: 'beginner',
@@ -130,8 +166,9 @@ const workouts = [
                 ],
                 category: 'strength',
                 photo: '',
-            },
-            {
+            }),
+            createExercise({
+                _id: '7',
                 name: 'Alternate Heel Touchers',
                 force: 'pull',
                 level: 'beginner',
@@ -148,7 +185,7 @@ const workouts = [
                 ],
                 category: 'strength',
                 photo: '',
-            },
+            }),
         ],
     },
 ];
