@@ -75,7 +75,7 @@ function renderExercise() {
         </BrowserRouter>,
     );
 }
-describe('ExerciseCard', () => {
+describe('Exercise', () => {
     describe('when the Exercise is rendered', async () => {
         it('make sure it is rendered and it works properly', async () => {
             mock.onGet(

@@ -63,6 +63,7 @@ function Exercise() {
                 icon={<Book size={48} />}
                 title={'Exercises'}
                 onChange={onChange}
+                placeholder={'Push Up'}
             />
             {loading ? listSkeletons() : listExercises(filteredExercises)}
         </div>

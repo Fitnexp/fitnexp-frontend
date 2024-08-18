@@ -43,7 +43,7 @@ function Workout() {
         const rows = [];
         for (let i = 0; i < workouts.length; i += 2) {
             rows.push(
-                <tr className="hidden md:table-row" key={i}>
+                <tr className="hidden md:table-row" key={crypto.randomUUID()}>
                     <td className="h-full w-1/2 p-2">
                         <WorkoutCard
                             workout={workouts[i]}
@@ -63,14 +63,11 @@ function Workout() {
                 </tr>,
             );
         }
-        for (let i = 0; i < workouts.length; i++) {
+        for (const workout of workouts) {
             rows.push(
-                <tr className="table-row md:hidden" key={i}>
+                <tr className="table-row md:hidden" key={crypto.randomUUID()}>
                     <td className="h-full w-full p-2">
-                        <WorkoutCard
-                            workout={workouts[i]}
-                            key={workouts[i]._id}
-                        />
+                        <WorkoutCard workout={workout} key={workout._id} />
                     </td>
                 </tr>,
             );
@@ -88,6 +85,7 @@ function Workout() {
                 icon={<Dumbbell size={48} />}
                 title={'Workouts'}
                 onChange={onChange}
+                placeholder={'Core Strength'}
             />
             {loading ? 'Loading...' : listWorkouts(filteredWorkouts)}
         </div>
