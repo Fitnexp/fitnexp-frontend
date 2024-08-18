@@ -10,6 +10,7 @@ function renderPageHeader() {
                 title={'Test Header'}
                 icon={undefined}
                 onChange={() => {}}
+                placeholder={'Search'}
             />
         </BrowserRouter>,
     );
