@@ -1,5 +1,5 @@
 import { expect, describe, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import WorkoutCard from './WorkoutCard';
 import IWorkout from '../../interfaces/workoutInterface';
@@ -28,6 +28,17 @@ describe('WorkoutCard', () => {
             for (const item of data) {
                 expect(screen.getByText(item as string)).toBeInTheDocument();
             }
+        });
+        it('if clicked, it should redirect to the workout page', async () => {
+            renderworkoutCard();
+            const card = screen.getByText(workout.name);
+            expect(card).toBeInTheDocument();
+            fireEvent.click(card);
+            await waitFor(() => {
+                expect(window.location.pathname).toBe(
+                    `/workout/${workout._id}`,
+                );
+            });
         });
     });
 });
