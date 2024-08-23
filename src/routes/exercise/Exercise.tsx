@@ -6,6 +6,12 @@ import { IExercise } from '@/interfaces/exerciseInterface';
 import { Skeleton } from '@/components/ui/skeleton';
 import ExerciseCard from '../../components/exercise/ExerciseCard';
 
+function listExercises(exercises: IExercise[]) {
+    return exercises.map((exercise) => (
+        <ExerciseCard exercise={exercise} key={exercise._id} extended={null} />
+    ));
+}
+
 function Exercise() {
     const [loading, setLoading] = useState(true);
     const [exercises, setExercises] = useState<IExercise[]>([]);
@@ -35,12 +41,6 @@ function Exercise() {
                     className="my-4 h-32 w-full"
                 />
             ));
-    }
-
-    function listExercises(exercises: IExercise[]) {
-        return exercises.map((exercise) => (
-            <ExerciseCard exercise={exercise} key={exercise._id} />
-        ));
     }
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {

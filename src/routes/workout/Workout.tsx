@@ -1,135 +1,81 @@
-import { Dumbbell } from 'lucide-react';
-import PageHeader from '@/components/common/PageHeader';
-import { useEffect, useState } from 'react';
+import ExerciseCard from '@/components/exercise/ExerciseCard';
+import { IExercise } from '@/interfaces/exerciseInterface';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
-import IWorkout from '@/interfaces/workoutInterface';
-import WorkoutCard from '@/components/workout/WorkoutCard';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useState } from 'react';
+import { ICompletedExercise } from '@/interfaces/exerciseInterface';
+
+function listExercises(
+    exercises: IExercise[],
+    completedExercises: ICompletedExercise | null,
+) {
+    return exercises.map((exercise, index) => (
+        <ExerciseCard
+            exercise={exercise}
+            extended={
+                completedExercises
+                    ? (completedExercises as unknown as ICompletedExercise[])[
+                          index
+                      ]
+                    : null
+            }
+            key={exercise._id}
+        />
+    ));
+}
 
 function Workout() {
-    const [loading, setLoading] = useState(true);
-    const [workouts, setWorkouts] = useState<IWorkout[]>([]);
-    const [filteredWorkouts, setFilteredWorkouts] = useState<IWorkout[]>([]);
-    let timeout: NodeJS.Timeout;
+    const location = useLocation();
+    const [completedExercises, setCompletedExercises] = useState(null);
+
+    const { workout } = location.state;
 
     useEffect(() => {
         document.title = 'Fitnexp - Workouts';
 
         axios
-            .get(`${import.meta.env.VITE_SERVER_URI}/api/workouts`, {
-                withCredentials: true,
-            })
+            .get(
+                `${import.meta.env.VITE_SERVER_URI}/api/workouts/${workout._id}`,
+                {
+                    withCredentials: true,
+                },
+            )
             .then((res) => {
-                setWorkouts(res.data.workouts);
-                setFilteredWorkouts(res.data.workouts);
-            })
-            .then(() => setLoading(false));
-    }, []);
+                setCompletedExercises(res.data.completedExercises);
+            });
+    }, [workout._id]);
 
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-            if (e.target.value === '') {
-                setFilteredWorkouts(workouts);
-                return;
-            }
-            const filtered = workouts.filter((workout) =>
-                workout.name
-                    .toLowerCase()
-                    .includes(e.target.value.toLocaleLowerCase()),
-            );
-            setFilteredWorkouts(filtered);
-        }, 300);
-    };
+    function getAllPrimaryMuscles() {
+        const capitalizeFirstLetter = (str: string) => {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        };
 
-    function listSkeletons() {
-        const rows = [];
-        for (let i = 0; i < 10; i++) {
-            rows.push(
-                <tr className="hidden md:table-row" key={crypto.randomUUID()}>
-                    <td className="h-full w-1/2 p-2">
-                        <Skeleton
-                            key={crypto.randomUUID()}
-                            className="h-40 w-full"
-                        />
-                    </td>
-                    <td className="h-full w-full p-2">
-                        <Skeleton
-                            key={crypto.randomUUID()}
-                            className="h-40 w-full"
-                        />
-                    </td>
-                </tr>,
-            );
-        }
-        for (let i = 0; i < 10; i++) {
-            rows.push(
-                <tr className="table-row md:hidden" key={crypto.randomUUID()}>
-                    <td className="h-full w-full p-2">
-                        <Skeleton
-                            key={crypto.randomUUID()}
-                            className="h-40 w-full"
-                        />
-                    </td>
-                </tr>,
-            );
-        }
-        return (
-            <table className="mx-1 my-4 h-full w-full">
-                <tbody>{rows}</tbody>
-            </table>
-        );
-    }
+        const allPrimaryMuscles = new Set<string>();
 
-    function listWorkouts(workouts: IWorkout[]) {
-        const rows = [];
-        for (let i = 0; i < workouts.length; i += 2) {
-            rows.push(
-                <tr className="hidden md:table-row" key={crypto.randomUUID()}>
-                    <td className="h-full w-1/2 p-2">
-                        <WorkoutCard
-                            workout={workouts[i]}
-                            key={workouts[i]._id}
-                        />
-                    </td>
-                    <td className="h-full w-full p-2">
-                        {workouts[i + 1] ? (
-                            <WorkoutCard
-                                workout={workouts[i + 1]}
-                                key={workouts[i + 1]._id}
-                            />
-                        ) : (
-                            <div className="h-full w-full" />
-                        )}
-                    </td>
-                </tr>,
-            );
-        }
-        for (const workout of workouts) {
-            rows.push(
-                <tr className="table-row md:hidden" key={crypto.randomUUID()}>
-                    <td className="h-full w-full p-2">
-                        <WorkoutCard workout={workout} key={workout._id} />
-                    </td>
-                </tr>,
-            );
-        }
-        return (
-            <table className="mx-1 my-4 h-full w-full">
-                <tbody>{rows}</tbody>
-            </table>
-        );
+        workout.exercises.forEach((exercise: IExercise) => {
+            exercise.primaryMuscles.forEach((muscle) => {
+                allPrimaryMuscles.add(capitalizeFirstLetter(muscle));
+            });
+        });
+
+        return Array.from(allPrimaryMuscles).join(', ');
     }
 
     return (
-        <div className="flex w-full flex-col">
-            <PageHeader
-                icon={<Dumbbell size={48} />}
-                title={'Workouts'}
-                onChange={onChange}
-                placeholder={'Core Strength'}
-            />
-            {loading ? listSkeletons() : listWorkouts(filteredWorkouts)}
+        <div className="w-full">
+            <div className="top-0 z-50 flex w-full flex-col gap-2 bg-white p-8 sm:sticky">
+                <h1 className="w-full items-center gap-4 bg-white text-5xl font-bold">
+                    {workout.name}
+                </h1>
+                <h2 className="text-start text-xl font-bold text-red-600">
+                    {getAllPrimaryMuscles()}
+                </h2>
+                <h2 className="text-start text-lg font-bold">
+                    {workout.description}
+                </h2>
+            </div>
+            {listExercises(workout.exercises, completedExercises)}
         </div>
     );
 }

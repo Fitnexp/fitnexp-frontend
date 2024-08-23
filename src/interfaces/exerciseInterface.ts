@@ -65,3 +65,15 @@ export interface IExercise {
     tips?: string[];
     photo?: string;
 }
+
+export interface Set {
+    repetitions: number;
+    weight: number;
+}
+
+export interface ICompletedExercise {
+    exercise_name: string;
+    username: string;
+    rest: number;
+    sets: Set[];
+}
