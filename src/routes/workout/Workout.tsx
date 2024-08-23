@@ -1,10 +1,8 @@
 import ExerciseCard from '@/components/exercise/ExerciseCard';
-import { IExercise } from '@/interfaces/exerciseInterface';
-import { useEffect } from 'react';
+import { IExercise, ICompletedExercise } from '@/interfaces/exerciseInterface';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { useState } from 'react';
-import { ICompletedExercise } from '@/interfaces/exerciseInterface';
 
 function listExercises(
     exercises: IExercise[],
