@@ -15,7 +15,7 @@ import {
 
 function ExerciseCard({
     exercise,
-    extended = null,
+    extended,
 }: {
     readonly exercise: Readonly<IExercise>;
     readonly extended: ICompletedExercise | null;
