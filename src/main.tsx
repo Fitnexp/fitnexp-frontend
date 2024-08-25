@@ -10,6 +10,7 @@ import LayoutNavBar from './components/common/LayoutNavBar.tsx';
 import Exercise from '@/routes/exercise/Exercise.tsx';
 import Workouts from '@/routes/workout/Workouts.tsx';
 import Workout from './routes/workout/Workout.tsx';
+import WorkoutStart from './routes/workout/start/WorkoutStart.tsx';
 
 const router = createBrowserRouter([
     {
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
                 path: '/profile',
             },
         ],
+    },
+    {
+        path: '/workout/:id/start',
+        element: <SecurityGate children={<WorkoutStart />} />,
     },
 ]);
 
