@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import Workout from './Workout';
 import MockAdapter from 'axios-mock-adapter';
@@ -43,10 +43,14 @@ describe('Workout', () => {
                 ).toBeInTheDocument();
             }
 
+            const startButton = screen.getAllByRole('button');
+            fireEvent.click(startButton[0]);
+
             await waitFor(
                 () => {
                     const table = screen.getAllByRole('table');
                     expect(table.length).toBe(3);
+                    fireEvent.click(startButton[0]);
                 },
                 {
                     timeout: 5000,

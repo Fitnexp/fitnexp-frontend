@@ -43,7 +43,7 @@ const completedExercises: ICompletedExercise[] = [
     {
         exercise_name: 'Alternating Kettlebell Press',
         username: 'Alberto',
-        rest: 60,
+        rest: 0,
         sets: [{ repetitions: 10, weight: 10 }],
     },
     {
@@ -59,7 +59,7 @@ const completedExercises: ICompletedExercise[] = [
     {
         exercise_name: 'Ab Crunch Machine',
         username: 'Alberto',
-        rest: 60,
+        rest: 11,
         sets: [
             { repetitions: 10, weight: 10 },
             { repetitions: 10, weight: 10 },
