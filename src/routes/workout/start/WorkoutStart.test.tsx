@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import exercises from '@/testData/exercises';
 import workouts from '@/testData/workouts';
 import completedExercises from '@/testData/completedExercises';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import WorkoutStart from './WorkoutStart';
 import Workouts from '../Workouts';
