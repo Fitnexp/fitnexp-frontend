@@ -64,6 +64,7 @@ export interface IExercise {
     description?: string;
     tips?: string[];
     photo?: string;
+    completedExercise?: ICompletedExercise;
 }
 
 export interface Set {
