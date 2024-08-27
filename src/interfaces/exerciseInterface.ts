@@ -77,4 +77,5 @@ export interface ICompletedExercise {
     username: string;
     rest: number;
     sets: Set[];
+    createdAt: string;
 }

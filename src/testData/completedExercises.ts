@@ -11,6 +11,7 @@ const completedExercises: ICompletedExercise[] = [
             { repetitions: 10, weight: 10 },
             { repetitions: 10, weight: 10 },
         ],
+        createdAt: '2024-06-27T16:17:56.081+00:00',
     },
     {
         exercise_name: 'Ab Roller',
@@ -20,6 +21,7 @@ const completedExercises: ICompletedExercise[] = [
             { repetitions: 10, weight: 10 },
             { repetitions: 10, weight: 10 },
         ],
+        createdAt: '2024-06-27T14:17:56.081+00:00',
     },
     {
         exercise_name: 'Alternating Cable Shoulder Press',
@@ -39,12 +41,14 @@ const completedExercises: ICompletedExercise[] = [
                 weight: 0,
             },
         ],
+        createdAt: '2024-06-27T14:17:56.081+00:00',
     },
     {
         exercise_name: 'Alternating Kettlebell Press',
         username: 'Alberto',
         rest: 0,
         sets: [{ repetitions: 10, weight: 10 }],
+        createdAt: '2024-06-27T14:17:56.081+00:00',
     },
     {
         exercise_name: '3/4 Sit-Up',
@@ -55,6 +59,7 @@ const completedExercises: ICompletedExercise[] = [
             { repetitions: 10, weight: 10 },
             { repetitions: 10, weight: 10 },
         ],
+        createdAt: '2024-06-27T14:17:56.081+00:00',
     },
     {
         exercise_name: 'Ab Crunch Machine',
@@ -66,6 +71,7 @@ const completedExercises: ICompletedExercise[] = [
             { repetitions: 10, weight: 10 },
             { repetitions: 10, weight: 10 },
         ],
+        createdAt: '2024-06-27T14:17:56.081+00:00',
     },
     {
         exercise_name: 'Air Bike',
@@ -76,6 +82,7 @@ const completedExercises: ICompletedExercise[] = [
             { repetitions: 10, weight: 10 },
             { repetitions: 10, weight: 10 },
         ],
+        createdAt: '2024-06-27T14:17:56.081+00:00',
     },
     {
         exercise_name: 'Alternate Heel Touchers',
@@ -87,6 +94,7 @@ const completedExercises: ICompletedExercise[] = [
             { repetitions: 10, weight: 10 },
             { repetitions: 10, weight: 10 },
         ],
+        createdAt: '2024-06-27T14:17:56.081+00:00',
     },
 ];
 
