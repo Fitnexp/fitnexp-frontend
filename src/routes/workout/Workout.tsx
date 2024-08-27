@@ -6,18 +6,12 @@ import axios from 'axios';
 
 function listExercises(
     exercises: IExercise[],
-    completedExercises: ICompletedExercise[] | null,
+    completedExercises: ICompletedExercise[][] | null,
 ) {
     return exercises.map((exercise, index) => (
         <ExerciseCard
             exercise={exercise}
-            extended={
-                completedExercises
-                    ? (completedExercises as unknown as ICompletedExercise[])[
-                          index
-                      ]
-                    : null
-            }
+            extended={completedExercises ? completedExercises[index][0] : null}
             key={exercise._id}
         />
     ));

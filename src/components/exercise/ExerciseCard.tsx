@@ -25,10 +25,10 @@ function ExerciseCard({
             className={`my-4 flex w-full flex-col gap-4 p-4 shadow ${!extended && 'cursor-pointer hover:bg-slate-100'}`}
         >
             <ExerciseData exercise={exercise} />
-            {Array.isArray(extended) && (
+            {extended && (
                 <>
                     <h1 className="text-lg">
-                        {extended[0].rest} seconds rest between sets
+                        {extended.rest} seconds rest between sets
                     </h1>
                     <Table>
                         <TableHeader>
@@ -45,7 +45,7 @@ function ExerciseCard({
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {extended[0].sets.map((set: Set, index: number) => (
+                            {extended.sets.map((set: Set, index: number) => (
                                 <TableRow key={crypto.randomUUID()}>
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{set.weight}</TableCell>

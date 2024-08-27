@@ -11,6 +11,7 @@ import Exercise from '@/routes/exercise/Exercise.tsx';
 import Workouts from '@/routes/workout/Workouts.tsx';
 import Workout from './routes/workout/Workout.tsx';
 import WorkoutStart from './routes/workout/start/WorkoutStart.tsx';
+import Profile from '@/routes/user/Profile.tsx';
 
 const router = createBrowserRouter([
     {
@@ -45,6 +46,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/profile',
+                element: <Profile />, // Use the imported Profile component
             },
         ],
     },

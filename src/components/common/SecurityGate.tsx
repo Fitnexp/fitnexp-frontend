@@ -9,7 +9,7 @@ const SecurityGate = ({ children }: { children: JSX.Element }) => {
 
     useEffect(() => {
         axios
-            .get(`${import.meta.env.VITE_SERVER_URI}/api/loggedUser`, {
+            .get(`${import.meta.env.VITE_SERVER_URI}/api/logged-user`, {
                 withCredentials: true,
             })
             .then((res) => setUsername(res.data.username))
