@@ -7,11 +7,17 @@ import axios from 'axios';
 function listExercises(
     exercises: IExercise[],
     completedExercises: ICompletedExercise[][] | null,
+    setCompletedExercises: React.Dispatch<
+        React.SetStateAction<ICompletedExercise[][] | null>
+    >,
 ) {
     return exercises.map((exercise, index) => (
         <ExerciseCard
             exercise={exercise}
             extended={completedExercises ? completedExercises[index][0] : null}
+            completedExercises={completedExercises}
+            setCompletedExercises={setCompletedExercises}
+            position={index}
             key={exercise._id}
         />
     ));
@@ -19,7 +25,9 @@ function listExercises(
 
 function Workout() {
     const location = useLocation();
-    const [completedExercises, setCompletedExercises] = useState(null);
+    const [completedExercises, setCompletedExercises] = useState<
+        ICompletedExercise[][] | null
+    >(null);
     const navigate = useNavigate();
 
     const { workout } = location.state;
@@ -36,6 +44,7 @@ function Workout() {
             )
             .then((res) => {
                 setCompletedExercises(res.data.completedExercises);
+                console.log(res.data);
             });
     }, [workout._id]);
 
@@ -93,7 +102,11 @@ function Workout() {
                     Start Workout
                 </button>
             </div>
-            {listExercises(workout.exercises, completedExercises)}
+            {listExercises(
+                workout.exercises,
+                completedExercises,
+                setCompletedExercises,
+            )}
         </div>
     );
 }
