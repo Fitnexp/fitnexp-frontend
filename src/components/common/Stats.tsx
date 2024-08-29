@@ -11,11 +11,9 @@ import {
     ChartLegendContent,
 } from '@/components/ui/chart';
 
-function getChartData(
-    exercises: IExercise[],
-    date: Date,
-    value: 'Repetitions' | 'Volume' | 'Volume (1 Set)',
-) {
+type Value = 'Repetitions' | 'Volume' | 'Volume (1 Set)';
+
+function getChartData(exercises: IExercise[], date: Date, value: Value) {
     const daysInMonth: { [key: string]: number } = {
         '01': 31,
         '02': 29,
@@ -54,11 +52,39 @@ function getChartData(
         );
     }
 
-    function getValueData(
-        day: string,
-        exercises: IExercise[],
-        value: 'Repetitions' | 'Volume' | 'Volume (1 Set)',
-    ) {
+    function getRepetitions(filteredExercises: IExercise[]): number {
+        let reps = 0;
+        for (const exercise of filteredExercises) {
+            for (const set of exercise.completedExercise?.sets || []) {
+                reps += set.repetitions;
+            }
+        }
+        return reps;
+    }
+
+    function getVolume(filteredExercises: IExercise[]): number {
+        let volume = 0;
+        for (const exercise of filteredExercises) {
+            for (const set of exercise.completedExercise?.sets || []) {
+                volume += set.repetitions * set.weight;
+            }
+        }
+        return volume;
+    }
+
+    function getMaxVolume(filteredExercises: IExercise[]): number {
+        let volume = 0;
+        for (const exercise of filteredExercises) {
+            for (const set of exercise.completedExercise?.sets || []) {
+                if (volume < set.repetitions * set.weight) {
+                    volume = set.repetitions * set.weight;
+                }
+            }
+        }
+        return volume;
+    }
+
+    function getValueData(day: string, exercises: IExercise[], value: Value) {
         const filteredExercises = exercises.filter(
             (exercise) =>
                 exercise.completedExercise &&
@@ -69,36 +95,16 @@ function getChartData(
         }
 
         if (value === 'Repetitions') {
-            let reps = 0;
-            for (const exercise of filteredExercises) {
-                for (const set of exercise.completedExercise?.sets || []) {
-                    reps += set.repetitions;
-                }
-            }
-            return reps;
+            return getRepetitions(filteredExercises);
         }
 
         /* istanbul ignore next */
         if (value === 'Volume') {
-            let volume = 0;
-            for (const exercise of filteredExercises) {
-                for (const set of exercise.completedExercise?.sets || []) {
-                    volume += set.repetitions * set.weight;
-                }
-            }
-            return volume;
+            return getVolume(filteredExercises);
         }
 
         if (value === 'Volume (1 Set)') {
-            let volume = 0;
-            for (const exercise of filteredExercises) {
-                for (const set of exercise.completedExercise?.sets || []) {
-                    volume < set.repetitions * set.weight
-                        ? (volume = set.repetitions * set.weight)
-                        : volume;
-                }
-            }
-            return volume;
+            return getMaxVolume(filteredExercises);
         }
     }
 
@@ -124,9 +130,7 @@ function Stats({
     readonly date: Date;
     readonly profile: boolean;
 }) {
-    const [value, setValue] = useState<
-        'Repetitions' | 'Volume' | 'Volume (1 Set)'
-    >('Repetitions');
+    const [value, setValue] = useState<Value>('Repetitions');
     const chartData = getChartData(exercises, date, value);
 
     const chartConfig = {
