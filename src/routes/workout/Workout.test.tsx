@@ -43,9 +43,6 @@ describe('Workout', () => {
                 ).toBeInTheDocument();
             }
 
-            const startButton = screen.getAllByRole('button');
-            fireEvent.click(startButton[0]);
-
             await waitFor(
                 () => {
                     const table = screen.getAllByRole('table');
@@ -61,11 +58,21 @@ describe('Workout', () => {
             expect(screen.getByText('Add Set')).toBeInTheDocument();
 
             const currentRows = screen.getAllByRole('row');
+
             fireEvent.click(screen.getAllByRole('button')[2]);
             expect(screen.getAllByRole('row').length).toBe(
-                currentRows.length + 1,
+                currentRows.length - 1,
             );
 
+            fireEvent.click(screen.getAllByRole('button')[2]);
+            expect(screen.getAllByRole('row').length).toBe(
+                currentRows.length - 1,
+            );
+
+            fireEvent.click(screen.getAllByRole('button')[3]);
+            expect(screen.getAllByRole('row').length).toBe(currentRows.length);
+
+            const startButton = screen.getAllByRole('button');
             fireEvent.click(startButton[0]);
         });
     });
