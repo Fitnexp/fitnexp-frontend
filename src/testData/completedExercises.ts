@@ -12,6 +12,10 @@ const completedExercises: ICompletedExercise[] = [
             { repetitions: 10, weight: 10 },
         ],
         createdAt: '2024-06-27T16:17:56.081+00:00',
+        greatest_weight: 10,
+        greatest_theorical_onerm: 13.33,
+        greatest_volume_oneset: 100,
+        greatest_volume: 400,
     },
     {
         exercise_name: 'Ab Roller',
@@ -22,6 +26,10 @@ const completedExercises: ICompletedExercise[] = [
             { repetitions: 10, weight: 10 },
         ],
         createdAt: '2024-06-27T14:17:56.081+00:00',
+        greatest_weight: 10,
+        greatest_theorical_onerm: 13.33,
+        greatest_volume_oneset: 100,
+        greatest_volume: 400,
     },
     {
         exercise_name: 'Alternating Cable Shoulder Press',
@@ -42,6 +50,10 @@ const completedExercises: ICompletedExercise[] = [
             },
         ],
         createdAt: '2024-06-27T14:17:56.081+00:00',
+        greatest_weight: 0,
+        greatest_theorical_onerm: 0,
+        greatest_volume_oneset: 0,
+        greatest_volume: 0,
     },
     {
         exercise_name: 'Alternating Kettlebell Press',
@@ -49,6 +61,10 @@ const completedExercises: ICompletedExercise[] = [
         rest: 0,
         sets: [{ repetitions: 10, weight: 10 }],
         createdAt: '2024-06-27T14:17:56.081+00:00',
+        greatest_weight: 0,
+        greatest_theorical_onerm: 0,
+        greatest_volume_oneset: 0,
+        greatest_volume: 0,
     },
     {
         exercise_name: '3/4 Sit-Up',
@@ -60,6 +76,10 @@ const completedExercises: ICompletedExercise[] = [
             { repetitions: 10, weight: 10 },
         ],
         createdAt: '2024-06-27T14:17:56.081+00:00',
+        greatest_weight: 0,
+        greatest_theorical_onerm: 0,
+        greatest_volume_oneset: 0,
+        greatest_volume: 0,
     },
     {
         exercise_name: 'Ab Crunch Machine',
@@ -72,6 +92,10 @@ const completedExercises: ICompletedExercise[] = [
             { repetitions: 10, weight: 10 },
         ],
         createdAt: '2024-06-27T14:17:56.081+00:00',
+        greatest_weight: 0,
+        greatest_theorical_onerm: 0,
+        greatest_volume_oneset: 0,
+        greatest_volume: 0,
     },
     {
         exercise_name: 'Air Bike',
@@ -83,6 +107,10 @@ const completedExercises: ICompletedExercise[] = [
             { repetitions: 10, weight: 10 },
         ],
         createdAt: '2024-06-27T14:17:56.081+00:00',
+        greatest_weight: 0,
+        greatest_theorical_onerm: 0,
+        greatest_volume_oneset: 0,
+        greatest_volume: 0,
     },
     {
         exercise_name: 'Alternate Heel Touchers',
@@ -95,6 +123,10 @@ const completedExercises: ICompletedExercise[] = [
             { repetitions: 10, weight: 10 },
         ],
         createdAt: '2024-06-27T14:17:56.081+00:00',
+        greatest_weight: 0,
+        greatest_theorical_onerm: 0,
+        greatest_volume_oneset: 0,
+        greatest_volume: 0,
     },
 ];
 

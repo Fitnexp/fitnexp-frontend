@@ -7,11 +7,12 @@ import SecurityGate from './components/common/SecurityGate.tsx';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import LayoutNavBar from './components/common/LayoutNavBar.tsx';
-import Exercise from '@/routes/exercise/Exercise.tsx';
 import Workouts from '@/routes/workout/Workouts.tsx';
 import Workout from './routes/workout/Workout.tsx';
 import WorkoutStart from './routes/workout/start/WorkoutStart.tsx';
 import Profile from '@/routes/user/Profile.tsx';
+import Exercises from '@/routes/exercise/Exercises.tsx';
+import Exercise from './routes/exercise/Exercise.tsx';
 
 const router = createBrowserRouter([
     {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
         children: [
             {
                 path: '/exercises',
+                element: <Exercises />,
+            },
+            {
+                path: '/exercise/:id',
                 element: <Exercise />,
             },
             {

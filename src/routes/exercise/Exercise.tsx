@@ -1,75 +1,124 @@
-import { Book } from 'lucide-react';
-import PageHeader from '@/components/common/PageHeader';
+import ExerciseData from '@/components/exercise/ExerciseData';
+import { useLocation } from 'react-router-dom';
+import ExerciseInstructions from '@/components/exercise/ExerciseInstructions';
+import { Clock4, ChartColumn, Medal } from 'lucide-react';
+import { ICompletedExercise, IExercise } from '@/interfaces/exerciseInterface';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { IExercise } from '@/interfaces/exerciseInterface';
-import { Skeleton } from '@/components/ui/skeleton';
-import ExerciseCard from '../../components/exercise/ExerciseCard';
+import ExerciseSets from '@/components/exercise/ExerciseSets';
+import Stats from '@/components/common/Stats';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 
-function listExercises(exercises: IExercise[]) {
-    return exercises.map((exercise) => (
-        <ExerciseCard exercise={exercise} key={exercise._id} extended={null} />
-    ));
-}
-
-function Exercise() {
+function Exercises() {
+    const location = useLocation();
+    const { exercise } = location.state;
+    const [completedExercises, setCompletedExercises] = useState<
+        ICompletedExercise[]
+    >([]);
     const [loading, setLoading] = useState(true);
-    const [exercises, setExercises] = useState<IExercise[]>([]);
-    const [filteredExercises, setFilteredExercises] = useState<IExercise[]>([]);
-    let timeout: NodeJS.Timeout;
 
     useEffect(() => {
-        document.title = 'Fitnexp - Exercises';
+        document.title = `Fitnexp - ${exercise.name}`;
 
         axios
-            .get(`${import.meta.env.VITE_SERVER_URI}/api/exercises`, {
-                withCredentials: true,
-            })
+            .get<{ completedExercises: ICompletedExercise[] }>(
+                `${import.meta.env.VITE_SERVER_URI}/api/exercises/completed-exercises`,
+                {
+                    withCredentials: true,
+                },
+            )
             .then((res) => {
-                setExercises(res.data.exercises);
-                setFilteredExercises(res.data.exercises);
-            })
-            .then(() => setLoading(false));
-    }, []);
+                setCompletedExercises(
+                    res.data.completedExercises.filter(
+                        (e) => e.exercise_name === exercise.name,
+                    ),
+                );
+                setLoading(false);
+            });
+    }, [exercise.name]);
 
-    function listSkeletons() {
-        return new Array(10)
-            .fill(0)
-            .map(() => (
-                <Skeleton
-                    key={crypto.randomUUID()}
-                    className="my-4 h-32 w-full"
-                />
-            ));
+    const exercises: IExercise[] = [];
+    for (const completedExercise of completedExercises) {
+        exercise.completedExercise = completedExercise;
+        exercises.push(exercise);
     }
 
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-            if (e.target.value === '') {
-                setFilteredExercises(exercises);
-                return;
-            }
-            const filtered = exercises.filter((exercise) =>
-                exercise.name
-                    .toLowerCase()
-                    .includes(e.target.value.toLocaleLowerCase()),
-            );
-            setFilteredExercises(filtered);
-        }, 300);
-    };
+    const personalRecords = [
+        {
+            label: 'Greatest Weight',
+            value: exercise.completedExercise?.greatest_weight + ' Kg',
+        },
+        {
+            label: 'Greatest Theorical 1RM',
+            value: exercise.completedExercise?.greatest_theorical_onerm + ' Kg',
+        },
+        {
+            label: 'Greatest Volume (1 set)',
+            value: exercise.completedExercise?.greatest_volume_oneset + ' Kg',
+        },
+        {
+            label: 'Greatest Volume',
+            value: exercise.completedExercise?.greatest_volume + ' Kg',
+        },
+    ];
 
     return (
-        <div className="flex w-full flex-col">
-            <PageHeader
-                icon={<Book size={48} />}
-                title={'Exercises'}
-                onChange={onChange}
-                placeholder={'Push Up'}
-            />
-            {loading ? listSkeletons() : listExercises(filteredExercises)}
+        <div>
+            <div className={`my-4 flex w-full flex-col gap-4 p-4`}>
+                <ExerciseData exercise={exercise} />
+            </div>
+            <div className="flex w-full flex-col gap-8 p-2 xl:p-0">
+                <ExerciseInstructions exercise={exercise} />
+                {!loading &&
+                    (completedExercises.length === 0 ? (
+                        <h1 className="mx-auto p-8 text-center text-5xl font-bold">
+                            NO DATA ABOUT THIS EXERCISE
+                        </h1>
+                    ) : (
+                        <>
+                            <h1 className="flex w-full items-center gap-2 bg-white text-3xl font-bold">
+                                <Clock4 /> Last Time Results
+                            </h1>
+                            <ExerciseSets
+                                completedExercise={completedExercises[0]}
+                            />
+                            <h1 className="flex w-full items-center gap-2 bg-white text-3xl font-bold">
+                                <ChartColumn /> Charts
+                            </h1>
+                            <Stats
+                                exercises={exercises}
+                                date={new Date()}
+                                profile={false}
+                            />
+                            <h1 className="flex w-full items-center gap-2 bg-white text-3xl font-bold">
+                                <Medal /> Personal Records
+                            </h1>
+                            <Table className="mb-8">
+                                <TableHeader></TableHeader>
+                                <TableBody>
+                                    {personalRecords.map((record) => (
+                                        <TableRow key={record.label}>
+                                            <TableCell>
+                                                {record.label}
+                                            </TableCell>
+                                            <TableCell>
+                                                {record.value}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </>
+                    ))}
+            </div>
         </div>
     );
 }
 
-export default Exercise;
+export default Exercises;
