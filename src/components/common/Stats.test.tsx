@@ -28,18 +28,18 @@ for (const exercise of exercisesTest) {
 
 const date = new Date('2024-08-27T16:43:07Z'); // UTC time
 
-function renderStats() {
+function renderStats({ profile }: { readonly profile: boolean }) {
     render(
         <BrowserRouter>
-            <Stats exercises={exercises} date={date} />
+            <Stats exercises={exercises} date={date} profile={profile} />
         </BrowserRouter>,
     );
 }
 
 describe('Stats', () => {
-    describe('when the Stats is rendered', async () => {
+    describe('when the Stats for Profile is rendered', async () => {
         it('make sure it is rendered and works correctly', async () => {
-            renderStats();
+            renderStats({ profile: true });
             expect(screen.getByText('Repetitions')).toBeTruthy();
 
             let button = screen.getByRole('button', { name: 'Volume' });
@@ -49,6 +49,21 @@ describe('Stats', () => {
             expect(button.classList.contains('bg-white')).toBeTruthy();
 
             button = screen.getByRole('button', { name: 'Repetitions' });
+            act(() => {
+                fireEvent.click(button);
+            });
+            expect(button.classList.contains('bg-white')).toBeTruthy();
+        });
+    });
+
+    describe('when the Stats for Exercise is rendered', async () => {
+        it('make sure it is rendered and works correctly', async () => {
+            renderStats({ profile: false });
+            expect(screen.getByText('Repetitions')).toBeTruthy();
+
+            const button = screen.getByRole('button', {
+                name: 'Volume (1 Set)',
+            });
             act(() => {
                 fireEvent.click(button);
             });
