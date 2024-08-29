@@ -15,6 +15,7 @@ import ChangeExercise from './ChangeExercise';
 import Rest from './Rest';
 import ExerciseData from '@/components/exercise/ExerciseData';
 import axios from 'axios';
+import ExerciseInstructions from '@/components/exercise/ExerciseInstructions';
 
 function WorkoutStart() {
     const [innerList, setInnerList] = useState(0);
@@ -81,27 +82,7 @@ function WorkoutStart() {
                         <ExerciseData exercise={exercise} />
                     </div>
                     <div className="flex w-full flex-col gap-8 p-2 xl:p-0">
-                        <div className="flex w-full flex-col gap-8 md:flex-row">
-                            <div className="auto w-full">
-                                <img
-                                    src={exercise.photo}
-                                    alt={exercise.name}
-                                    className="h-full w-full rounded-md object-cover"
-                                />
-                            </div>
-                            <ol className="list-inside list-decimal">
-                                {exercise.instructions.map(
-                                    (instruction: string) => (
-                                        <li
-                                            key={crypto.randomUUID()}
-                                            className="my-2"
-                                        >
-                                            {instruction}
-                                        </li>
-                                    ),
-                                )}
-                            </ol>
-                        </div>
+                        <ExerciseInstructions exercise={exercise} />
                         <button
                             className="m-2 w-fit rounded bg-red-800 px-4 py-2 text-white xl:mx-0"
                             onClick={() => navigate('/workouts')}
