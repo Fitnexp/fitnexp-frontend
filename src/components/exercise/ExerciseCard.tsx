@@ -1,17 +1,6 @@
-import {
-    ICompletedExercise,
-    IExercise,
-    Set,
-} from '@/interfaces/exerciseInterface';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import { ICompletedExercise, IExercise } from '@/interfaces/exerciseInterface';
 import ExerciseData from './ExerciseData';
+import ExerciseSets from './ExerciseSets';
 
 function ExerciseCard({
     exercise,
@@ -25,37 +14,7 @@ function ExerciseCard({
             className={`my-4 flex w-full flex-col gap-4 p-4 shadow ${!extended && 'cursor-pointer hover:bg-slate-100'}`}
         >
             <ExerciseData exercise={exercise} />
-            {extended && (
-                <>
-                    <h1 className="text-lg">
-                        {extended.rest} seconds rest between sets
-                    </h1>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="text-black">
-                                    Sets
-                                </TableHead>
-                                <TableHead className="text-black">
-                                    Kilograms
-                                </TableHead>
-                                <TableHead className="text-black">
-                                    Repetitions
-                                </TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {extended.sets.map((set: Set, index: number) => (
-                                <TableRow key={crypto.randomUUID()}>
-                                    <TableCell>{index + 1}</TableCell>
-                                    <TableCell>{set.weight}</TableCell>
-                                    <TableCell>{set.repetitions}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </>
-            )}
+            <ExerciseSets completedExercise={extended} />
         </div>
     );
 }

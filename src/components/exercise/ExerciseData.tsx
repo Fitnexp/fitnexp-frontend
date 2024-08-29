@@ -21,10 +21,10 @@ function ExerciseData({ exercise }: Readonly<{ exercise: IExercise }>) {
             </div>
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col">
-                    <h1 className="w-full text-3xl font-bold">
+                    <h1 className="w-full text-start text-3xl font-bold">
                         {exercise.name}
                     </h1>
-                    <h2 className="text-xl">
+                    <h2 className="text-start text-xl">
                         {primaryMuscles.map((muscle: string, index: number) => (
                             <span
                                 key={crypto.randomUUID()}

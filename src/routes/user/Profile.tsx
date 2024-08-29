@@ -42,27 +42,6 @@ function getCompletedExercises(
         });
 }
 
-function ListExercises({
-    filteredExercises,
-}: {
-    readonly filteredExercises: IExercise[];
-}) {
-    if (filteredExercises.length === 0) {
-        return (
-            <h1 className="mx-auto p-8 text-center text-5xl font-bold">
-                NO EXERCISES FOUND
-            </h1>
-        );
-    }
-    return filteredExercises.map((exercise) => (
-        <ExerciseCard
-            key={crypto.randomUUID()}
-            exercise={exercise}
-            extended={exercise.completedExercise || null}
-        />
-    ));
-}
-
 function getExercises(
     completedExercises: ICompletedExercise[],
     setExercises: React.Dispatch<React.SetStateAction<IExercise[]>>,
@@ -90,6 +69,27 @@ function getExercises(
         });
 }
 
+function ListExercises({
+    filteredExercises,
+}: {
+    readonly filteredExercises: IExercise[];
+}) {
+    if (filteredExercises.length === 0) {
+        return (
+            <h1 className="mx-auto p-8 text-center text-5xl font-bold">
+                NO EXERCISES FOUND
+            </h1>
+        );
+    }
+    return filteredExercises.map((exercise) => (
+        <ExerciseCard
+            key={crypto.randomUUID()}
+            exercise={exercise}
+            extended={exercise.completedExercise || null}
+        />
+    ));
+}
+
 function Profile(): JSX.Element {
     const [userData, setUserData] = useState<IUser | null>(null);
     const [exercises, setExercises] = useState<IExercise[]>([]);
@@ -99,7 +99,6 @@ function Profile(): JSX.Element {
     const [exercisesLoading, setExercisesLoading] = useState<boolean>(true);
 
     const [date, setDate] = useState<Date | undefined>(new Date());
-    console.log(date);
 
     useEffect(() => {
         document.title = 'Fitnexp - Profile';
@@ -129,7 +128,7 @@ function Profile(): JSX.Element {
     return (
         <div className="flex w-full flex-col gap-6">
             <div className="relative bottom-0 z-10 flex flex-col xl:sticky xl:top-0">
-                <h1 className="hidden w-full items-center gap-4 bg-white px-8 pb-4 pt-8 text-5xl font-bold xl:flex">
+                <h1 className="z-50 hidden w-full items-center gap-4 bg-white px-8 pb-4 pt-8 text-5xl font-bold xl:flex">
                     <User size={48} /> My Profile
                 </h1>
             </div>
@@ -168,7 +167,11 @@ function Profile(): JSX.Element {
                     {exercisesLoading ? (
                         <Skeleton className="h-40 w-full" />
                     ) : (
-                        <Stats exercises={exercises} date={date} />
+                        <Stats
+                            exercises={exercises}
+                            date={date}
+                            profile={true}
+                        />
                     )}
                     {exercisesLoading ? (
                         <Skeleton className="h-40 w-full" />

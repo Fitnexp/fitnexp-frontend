@@ -14,7 +14,7 @@ import {
 function getChartData(
     exercises: IExercise[],
     date: Date,
-    value: 'Repetitions' | 'Volume',
+    value: 'Repetitions' | 'Volume' | 'Volume (1 Set)',
 ) {
     const daysInMonth: { [key: string]: number } = {
         '01': 31,
@@ -57,7 +57,7 @@ function getChartData(
     function getValueData(
         day: string,
         exercises: IExercise[],
-        value: 'Repetitions' | 'Volume',
+        value: 'Repetitions' | 'Volume' | 'Volume (1 Set)',
     ) {
         const filteredExercises = exercises.filter(
             (exercise) =>
@@ -88,6 +88,18 @@ function getChartData(
             }
             return volume;
         }
+
+        if (value === 'Volume (1 Set)') {
+            let volume = 0;
+            for (const exercise of filteredExercises) {
+                for (const set of exercise.completedExercise?.sets || []) {
+                    volume < set.repetitions * set.weight
+                        ? (volume = set.repetitions * set.weight)
+                        : volume;
+                }
+            }
+            return volume;
+        }
     }
 
     const filteredExercises = filterExercisesByMonth(exercises, date);
@@ -106,11 +118,15 @@ function getChartData(
 function Stats({
     exercises,
     date,
+    profile,
 }: {
     readonly exercises: IExercise[];
     readonly date: Date;
+    readonly profile: boolean;
 }) {
-    const [value, setValue] = useState<'Repetitions' | 'Volume'>('Repetitions');
+    const [value, setValue] = useState<
+        'Repetitions' | 'Volume' | 'Volume (1 Set)'
+    >('Repetitions');
     const chartData = getChartData(exercises, date, value);
 
     const chartConfig = {
@@ -135,6 +151,14 @@ function Stats({
                 >
                     Volume
                 </button>
+                {!profile && (
+                    <button
+                        onClick={() => setValue('Volume (1 Set)')}
+                        className={`w-full rounded py-2 ${value === 'Volume (1 Set)' ? 'bg-white' : ''}`}
+                    >
+                        Volume (1 Set)
+                    </button>
+                )}
             </div>
             <ChartContainer
                 config={chartConfig}
