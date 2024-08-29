@@ -87,6 +87,9 @@ function Exercises() {
                             </h1>
                             <ExerciseSets
                                 completedExercise={completedExercises[0]}
+                                completedExercises={null}
+                                setCompletedExercises={null}
+                                position={null}
                             />
                             <h1 className="flex w-full items-center gap-2 bg-white text-3xl font-bold">
                                 <ChartColumn /> Charts

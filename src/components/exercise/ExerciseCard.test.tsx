@@ -10,7 +10,13 @@ const exercise: IExercise = exercises[0];
 function renderExerciseCard() {
     render(
         <BrowserRouter>
-            <ExerciseCard exercise={exercise} extended={null} />
+            <ExerciseCard
+                exercise={exercise}
+                extended={null}
+                completedExercises={null}
+                setCompletedExercises={null}
+                position={null}
+            />
         </BrowserRouter>,
     );
 }

@@ -50,12 +50,23 @@ describe('Workout', () => {
                 () => {
                     const table = screen.getAllByRole('table');
                     expect(table.length).toBe(3);
-                    fireEvent.click(startButton[0]);
                 },
                 {
                     timeout: 5000,
                 },
             );
+
+            expect(screen.getAllByRole('button').length).toBe(4);
+            fireEvent.click(screen.getAllByRole('button')[1]);
+            expect(screen.getByText('Add Set')).toBeInTheDocument();
+
+            const currentRows = screen.getAllByRole('row');
+            fireEvent.click(screen.getAllByRole('button')[2]);
+            expect(screen.getAllByRole('row').length).toBe(
+                currentRows.length + 1,
+            );
+
+            fireEvent.click(startButton[0]);
         });
     });
 });

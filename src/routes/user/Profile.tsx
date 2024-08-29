@@ -86,6 +86,9 @@ function ListExercises({
             key={crypto.randomUUID()}
             exercise={exercise}
             extended={exercise.completedExercise || null}
+            completedExercises={null}
+            setCompletedExercises={null}
+            position={null}
         />
     ));
 }

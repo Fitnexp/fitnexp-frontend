@@ -22,7 +22,13 @@ function ListExercises({ exercises }: { readonly exercises: IExercise[] }) {
                 })
             }
         >
-            <ExerciseCard exercise={exercise} extended={null} />
+            <ExerciseCard
+                exercise={exercise}
+                extended={null}
+                completedExercises={null}
+                setCompletedExercises={null}
+                position={null}
+            />
         </button>
     ));
 }
