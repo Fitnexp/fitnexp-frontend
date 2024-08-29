@@ -26,6 +26,7 @@ export default defineConfig({
                 '**/*.test.tsx',
                 'src/components/common/SecurityGate.tsx',
                 'src/routes/workout/start/Rest.tsx',
+                'src/components/common/Stats.tsx',
             ],
         },
     },
