@@ -7,7 +7,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { Pencil } from 'lucide-react';
+import { Pencil, X } from 'lucide-react';
 import { useState } from 'react';
 
 function handleAddSet({
@@ -41,6 +41,50 @@ function handleAddSet({
                 {
                     ...completedExercise,
                     sets: [...completedExercise.sets, newSet],
+                },
+            ];
+        }
+        return exercise;
+    });
+
+    // Update the state with the new array
+    setCompletedExercises(updatedExercises);
+}
+
+function handleDeleteSet({
+    completedExercise,
+    completedExercises,
+    setCompletedExercises,
+    position,
+    row,
+}: {
+    readonly completedExercise: ICompletedExercise | null;
+    readonly completedExercises: ICompletedExercise[][] | null;
+    readonly setCompletedExercises: React.Dispatch<
+        React.SetStateAction<ICompletedExercise[][] | null>
+    > | null;
+    readonly position: number | null;
+    readonly row: number;
+}) {
+    if (
+        !completedExercise ||
+        !completedExercises ||
+        !setCompletedExercises ||
+        position === null
+    ) {
+        return;
+    }
+
+    if (completedExercise.sets.length === 1) {
+        return;
+    }
+
+    const updatedExercises = completedExercises.map((exercise, index) => {
+        if (index === position) {
+            return [
+                {
+                    ...completedExercise,
+                    sets: completedExercise.sets.filter((_, i) => i !== row),
                 },
             ];
         }
@@ -133,6 +177,7 @@ function ExerciseSets({
                             <TableHead className="text-black">
                                 Repetitions
                             </TableHead>
+                            {edit && <TableHead></TableHead>}
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -142,6 +187,24 @@ function ExerciseSets({
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{set.weight}</TableCell>
                                     <TableCell>{set.repetitions}</TableCell>
+                                    {edit && (
+                                        <TableCell className="w-[50px]">
+                                            <button
+                                                className={`rounded-full ${completedExercise.sets.length === 1 ? 'bg-slate-300' : 'bg-red-800'} `}
+                                                onClick={() =>
+                                                    handleDeleteSet({
+                                                        completedExercise,
+                                                        completedExercises,
+                                                        setCompletedExercises,
+                                                        position,
+                                                        row: index,
+                                                    })
+                                                }
+                                            >
+                                                <X className="p-1 text-white" />
+                                            </button>
+                                        </TableCell>
+                                    )}
                                 </TableRow>
                             ),
                         )}
