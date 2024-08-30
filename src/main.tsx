@@ -13,6 +13,7 @@ import WorkoutStart from './routes/workout/start/WorkoutStart.tsx';
 import Profile from '@/routes/user/Profile.tsx';
 import Exercises from '@/routes/exercise/Exercises.tsx';
 import Exercise from './routes/exercise/Exercise.tsx';
+import ErrorPage from './components/common/ErrorPage.tsx';
 
 const router = createBrowserRouter([
     {
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
                 element: <Register />,
             },
         ],
+        errorElement: <ErrorPage url={'/'} />,
     },
     {
         path: '/',
@@ -54,10 +56,12 @@ const router = createBrowserRouter([
                 element: <Profile />, // Use the imported Profile component
             },
         ],
+        errorElement: <ErrorPage url={'/workouts'} />,
     },
     {
         path: '/workout/:id/start',
         element: <SecurityGate children={<WorkoutStart />} />,
+        errorElement: <ErrorPage url={'/workouts'} />,
     },
 ]);
 

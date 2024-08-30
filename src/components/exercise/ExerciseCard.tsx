@@ -8,6 +8,7 @@ function ExerciseCard({
     completedExercises,
     setCompletedExercises,
     position,
+    children = null,
 }: {
     readonly exercise: Readonly<IExercise>;
     readonly extended: ICompletedExercise | null;
@@ -17,11 +18,13 @@ function ExerciseCard({
         React.SetStateAction<ICompletedExercise[][] | null>
     > | null;
     readonly position: number | null;
+    readonly children?: React.ReactNode;
 }) {
     return (
         <div
-            className={`my-4 flex w-full flex-col gap-4 p-4 shadow ${!extended && 'cursor-pointer hover:bg-slate-100'}`}
+            className={`relative my-4 flex w-full flex-col gap-4 p-4 shadow ${!extended && 'cursor-pointer hover:bg-slate-100'}`}
         >
+            {children}
             <ExerciseData exercise={exercise} />
             <ExerciseSets
                 completedExercise={extended}

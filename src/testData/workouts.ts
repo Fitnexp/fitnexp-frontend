@@ -17,6 +17,12 @@ const workouts: IWorkout[] = [
             'A beginner-friendly workout to strengthen the core muscles.',
         exercises: [exercises[0], exercises[2], exercises[8], exercises[9]],
     },
+    {
+        _id: '1',
+        username: 'Alberto',
+        name: 'Empty Workout',
+        exercises: [],
+    },
 ];
 
 export default workouts;
