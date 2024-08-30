@@ -19,8 +19,6 @@ function deleteExercise(
         return;
     }
 
-    console.log(completedExercises);
-
     axios
         .delete(
             `${import.meta.env.VITE_SERVER_URI}/api/workouts/${workoutId}/exercises/${index}`,
@@ -97,7 +95,6 @@ function Workout() {
             )
             .then((res) => {
                 setCompletedExercises(res.data.completedExercises);
-                console.log(res.data);
             });
     }, [workout]);
 
