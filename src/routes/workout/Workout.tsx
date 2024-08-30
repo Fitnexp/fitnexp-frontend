@@ -3,8 +3,46 @@ import { IExercise, ICompletedExercise } from '@/interfaces/exerciseInterface';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Trash } from 'lucide-react';
+import IWorkout from '@/interfaces/workoutInterface';
+
+function deleteExercise(
+    workout: IWorkout,
+    workoutId: string,
+    index: number,
+    completedExercises: ICompletedExercise[][] | null,
+    setCompletedExercises: React.Dispatch<
+        React.SetStateAction<ICompletedExercise[][] | null>
+    >,
+) {
+    if (completedExercises === null || setCompletedExercises === null) {
+        return;
+    }
+
+    console.log(completedExercises);
+
+    axios
+        .delete(
+            `${import.meta.env.VITE_SERVER_URI}/api/workouts/${workoutId}/exercises/${index}`,
+            {
+                withCredentials: true,
+            },
+        )
+        .then(() => {
+            const updatedExercises = completedExercises.filter((_, i) => {
+                return i !== index;
+            });
+
+            workout.exercises = workout.exercises.filter((_, i) => {
+                return i !== index;
+            });
+            setCompletedExercises(updatedExercises);
+        });
+}
 
 function listExercises(
+    workout: IWorkout,
+    workoutId: string,
     exercises: IExercise[],
     completedExercises: ICompletedExercise[][] | null,
     setCompletedExercises: React.Dispatch<
@@ -19,7 +57,22 @@ function listExercises(
             setCompletedExercises={setCompletedExercises}
             position={index}
             key={exercise._id}
-        />
+        >
+            <button
+                className="absolute right-4 top-4 rounded-full bg-red-800 p-2"
+                onClick={() => {
+                    deleteExercise(
+                        workout,
+                        workoutId,
+                        index,
+                        completedExercises,
+                        setCompletedExercises,
+                    );
+                }}
+            >
+                <Trash className="text-white" size={18} />
+            </button>
+        </ExerciseCard>
     ));
 }
 
@@ -46,7 +99,7 @@ function Workout() {
                 setCompletedExercises(res.data.completedExercises);
                 console.log(res.data);
             });
-    }, [workout._id]);
+    }, [workout]);
 
     function getAllPrimaryMuscles() {
         const capitalizeFirstLetter = (str: string) => {
@@ -68,7 +121,7 @@ function Workout() {
         exercises: IExercise[],
         completedExercises: ICompletedExercise[][] | null,
     ) {
-        if (completedExercises !== null) {
+        if (completedExercises !== null && completedExercises.length > 0) {
             exercises.forEach((exercise, index) => {
                 exercise.completedExercise = completedExercises[index][0];
             });
@@ -80,32 +133,38 @@ function Workout() {
 
     return (
         <div className="w-full">
-            <div className="top-16 z-50 flex w-full flex-col gap-2 bg-white p-8 sm:sticky xl:top-0">
-                <h1 className="w-full items-center gap-4 bg-white text-5xl font-bold">
-                    {workout.name}
-                </h1>
-                <h2 className="text-start text-xl font-bold text-red-600">
-                    {getAllPrimaryMuscles()}
-                </h2>
-                <h2 className="text-start text-lg font-bold">
-                    {workout.description}
-                </h2>
-                <button
-                    className="mt-2 w-fit rounded bg-slate-700 px-4 py-2 text-white"
-                    onClick={() =>
-                        handleStartWorkout(
-                            workout.exercises,
-                            completedExercises,
-                        )
-                    }
-                >
-                    Start Workout
-                </button>
-            </div>
-            {listExercises(
-                workout.exercises,
-                completedExercises,
-                setCompletedExercises,
+            {workout && (
+                <>
+                    <div className="top-16 z-50 flex w-full flex-col gap-2 bg-white p-8 sm:sticky xl:top-0">
+                        <h1 className="w-full items-center gap-4 bg-white text-5xl font-bold">
+                            {workout.name}
+                        </h1>
+                        <h2 className="text-start text-xl font-bold text-red-600">
+                            {getAllPrimaryMuscles()}
+                        </h2>
+                        <h2 className="text-start text-lg font-bold">
+                            {workout.description}
+                        </h2>
+                        <button
+                            className={`mt-2 w-fit rounded ${completedExercises !== null && completedExercises.length > 0 ? 'bg-slate-700' : 'bg-slate-300'} px-4 py-2 text-white`}
+                            onClick={() =>
+                                handleStartWorkout(
+                                    workout.exercises,
+                                    completedExercises,
+                                )
+                            }
+                        >
+                            Start Workout
+                        </button>
+                    </div>
+                    {listExercises(
+                        workout,
+                        workout._id,
+                        workout.exercises,
+                        completedExercises,
+                        setCompletedExercises,
+                    )}
+                </>
             )}
         </div>
     );

@@ -35,7 +35,7 @@ function WorkoutCard({ workout }: { readonly workout: Readonly<IWorkout> }) {
             <div className="flex flex-col gap-4 sm:flex-row">
                 <div className="h-32 min-h-32 w-32 min-w-32">
                     <img
-                        src={workout.exercises[0].photo}
+                        src={workout.exercises[0]?.photo}
                         alt={workout.name}
                         className="h-full w-full rounded-md object-cover"
                     />
