@@ -36,6 +36,11 @@ describe('Workout', () => {
                     [completedExercises[3]],
                 ],
             });
+
+            mock.onDelete(
+                `${import.meta.env.VITE_SERVER_URI}/api/workouts/${workouts[0]._id}/exercises/0`,
+            ).reply(200);
+
             renderWorkout();
             for (const exercises in workout.exercises) {
                 expect(
@@ -53,23 +58,26 @@ describe('Workout', () => {
                 },
             );
 
-            expect(screen.getAllByRole('button').length).toBe(4);
-            fireEvent.click(screen.getAllByRole('button')[1]);
+            expect(screen.getAllByRole('button').length).toBe(7);
+            fireEvent.click(screen.getAllByRole('button')[2]);
             expect(screen.getByText('Add Set')).toBeInTheDocument();
 
             const currentRows = screen.getAllByRole('row');
 
-            fireEvent.click(screen.getAllByRole('button')[2]);
-            expect(screen.getAllByRole('row').length).toBe(
-                currentRows.length - 1,
-            );
-
-            fireEvent.click(screen.getAllByRole('button')[2]);
+            fireEvent.click(screen.getAllByRole('button')[3]);
             expect(screen.getAllByRole('row').length).toBe(
                 currentRows.length - 1,
             );
 
             fireEvent.click(screen.getAllByRole('button')[3]);
+            expect(screen.getAllByRole('row').length).toBe(
+                currentRows.length - 1,
+            );
+
+            fireEvent.click(screen.getAllByRole('button')[1]);
+            expect(screen.getAllByRole('img').length).toBe(3);
+
+            fireEvent.click(screen.getAllByRole('button')[4]);
             expect(screen.getAllByRole('row').length).toBe(currentRows.length);
 
             const startButton = screen.getAllByRole('button');
