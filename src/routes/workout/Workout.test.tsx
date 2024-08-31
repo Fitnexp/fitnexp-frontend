@@ -1,11 +1,18 @@
 import { describe, it, expect } from 'vitest';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+    act,
+    fireEvent,
+    render,
+    screen,
+    waitFor,
+} from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import Workout from './Workout';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import workouts from '@/testData/workouts';
 import completedExercises from '@/testData/completedExercises';
+import exercises from '@/testData/exercises';
 
 const mock = new MockAdapter(axios);
 
@@ -37,8 +44,17 @@ describe('Workout', () => {
                 ],
             });
 
+            mock.onGet(
+                `${import.meta.env.VITE_SERVER_URI}/api/exercises`,
+            ).reply(200, { exercises: exercises });
+
             mock.onDelete(
                 `${import.meta.env.VITE_SERVER_URI}/api/workouts/${workouts[0]._id}/exercises/0`,
+            ).reply(200);
+
+            mock.onPost(
+                `${import.meta.env.VITE_SERVER_URI}/api/workouts/${workout._id}/exercises`,
+                exercises[0],
             ).reply(200);
 
             renderWorkout();
@@ -58,7 +74,7 @@ describe('Workout', () => {
                 },
             );
 
-            expect(screen.getAllByRole('button').length).toBe(7);
+            expect(screen.getAllByRole('button').length).toBe(8);
             fireEvent.click(screen.getAllByRole('button')[2]);
             expect(screen.getByText('Add Set')).toBeInTheDocument();
 
@@ -79,6 +95,58 @@ describe('Workout', () => {
 
             fireEvent.click(screen.getAllByRole('button')[4]);
             expect(screen.getAllByRole('row').length).toBe(currentRows.length);
+
+            let addExerciseButton = screen.getByText('Add Exercise');
+            act(() => {
+                fireEvent.click(addExerciseButton);
+            });
+
+            expect(screen.getByText('Choose an exercise')).toBeInTheDocument();
+            await waitFor(() => {
+                const exercise = screen.getByText('3/4 Sit-Up');
+                act(() => {
+                    fireEvent.click(exercise);
+                });
+            });
+
+            addExerciseButton = screen.getByText('Add Exercise');
+            act(() => {
+                fireEvent.click(addExerciseButton);
+            });
+
+            const searchBar = screen.getByPlaceholderText('Push Up');
+            expect(searchBar).toBeInTheDocument();
+
+            act(() => {
+                fireEvent.change(searchBar, { target: { value: 'Ham' } });
+            });
+
+            await waitFor(
+                () => {
+                    expect(screen.getAllByText('beginner')).toHaveLength(1);
+                },
+                { timeout: 5000 },
+            );
+
+            act(() => {
+                fireEvent.change(searchBar, { target: { value: '' } });
+            });
+
+            await waitFor(
+                () => {
+                    for (const exercise of exercises) {
+                        expect(
+                            screen.getByText(exercise.name),
+                        ).toBeInTheDocument();
+                    }
+                },
+                { timeout: 5000 },
+            );
+
+            const backButton = screen.getByText('Go Back');
+            act(() => {
+                fireEvent.click(backButton);
+            });
 
             const startButton = screen.getAllByRole('button');
             fireEvent.click(startButton[0]);
