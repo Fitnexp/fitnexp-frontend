@@ -114,23 +114,23 @@ describe('Workout', () => {
                 fireEvent.click(addExerciseButton);
             });
 
-            const searchBar = screen.getByPlaceholderText('Push Up');
-            expect(searchBar).toBeInTheDocument();
+            const searchBar = screen.getByPlaceholderText('Push Up'); // NOSONAR
+            expect(searchBar).toBeInTheDocument(); // NOSONAR
 
             act(() => {
                 fireEvent.change(searchBar, { target: { value: 'Ham' } });
-            });
+            }); // NOSONAR
 
             await waitFor(
                 () => {
                     expect(screen.getAllByText('beginner')).toHaveLength(1);
                 },
                 { timeout: 5000 },
-            );
+            ); // NOSONAR
 
             act(() => {
                 fireEvent.change(searchBar, { target: { value: '' } });
-            });
+            }); // NOSONAR
 
             await waitFor(
                 () => {
@@ -141,7 +141,7 @@ describe('Workout', () => {
                     }
                 },
                 { timeout: 5000 },
-            );
+            ); // NOSONAR
 
             const backButton = screen.getByText('Go Back');
             act(() => {
