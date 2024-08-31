@@ -5,11 +5,13 @@ function PageHeader({
     icon,
     onChange,
     placeholder,
+    children = null,
 }: {
     readonly title: string;
     readonly icon: React.ReactNode;
     readonly onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     readonly placeholder: string;
+    readonly children?: React.ReactNode;
 }) {
     return (
         <div className="relative bottom-0 z-10 flex flex-col xl:sticky xl:top-0">
@@ -17,6 +19,7 @@ function PageHeader({
                 {icon} {title}
             </h1>
             <SearchBar onChange={onChange} placeholder={placeholder} />
+            {children}
         </div>
     );
 }
