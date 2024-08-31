@@ -76,6 +76,50 @@ describe('Workouts', () => {
                 },
                 { timeout: 5000 },
             );
+
+            let button = screen.getByText('Add Workout');
+            act(() => {
+                fireEvent.click(button);
+            });
+            waitFor(() => {
+                expect(
+                    screen.getByText('Description (Optional)'),
+                ).toBeInTheDocument();
+            });
+
+            mock.onPost(
+                `${import.meta.env.VITE_SERVER_URI}/api/workouts`,
+            ).reply(400, {
+                errors: {
+                    name: 'Name must be a string',
+                },
+            });
+
+            button = screen.getByText('Create');
+            act(() => {
+                fireEvent.click(button);
+            });
+            waitFor(() => {
+                expect(
+                    screen.getByText('Email is required'),
+                ).toBeInTheDocument();
+            });
+
+            const nameInput = screen.getAllByLabelText('Name');
+            act(() => {
+                fireEvent.change(nameInput[0], {
+                    target: { value: 'Test Workout' },
+                });
+            });
+
+            mock.onPost(
+                `${import.meta.env.VITE_SERVER_URI}/api/workouts`,
+            ).reply(200);
+
+            button = screen.getByText('Create');
+            act(() => {
+                fireEvent.click(button);
+            });
         });
     });
 });

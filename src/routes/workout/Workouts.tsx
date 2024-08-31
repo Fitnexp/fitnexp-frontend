@@ -5,26 +5,93 @@ import axios from 'axios';
 import IWorkout from '@/interfaces/workoutInterface';
 import WorkoutCard from '@/components/workout/WorkoutCard';
 import { Skeleton } from '@/components/ui/skeleton';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { Form } from '@/components/ui/form';
+import FormFieldComponent from '@/components/user/FormFieldComponent';
+import { Button } from '@/components/ui/button';
+
+const formSchema = z.object({
+    name: z.string({ message: 'Email is required' }),
+    description: z.string().optional(),
+});
+
+function AddWorkoutForm({
+    setWorkouts,
+}: {
+    readonly setWorkouts: React.Dispatch<React.SetStateAction<IWorkout[]>>;
+}) {
+    const [error, setError] = useState<string | null>(null);
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            name: '',
+            description: '',
+        },
+    });
+
+    const onSubmit = (values: z.infer<typeof formSchema>) => {
+        setError(null);
+        axios
+            .post(`${import.meta.env.VITE_SERVER_URI}/api/workouts`, values, {
+                withCredentials: true,
+            })
+            .then(() => {
+                setWorkouts([]);
+            })
+            .catch((err) => {
+                setError(Object.values(err.response.data.errors)[0] as string);
+            });
+    };
+
+    return (
+        <Form {...form}>
+            <form
+                className="m-4 w-11/12"
+                onSubmit={form.handleSubmit(onSubmit)}
+            >
+                <FormFieldComponent name="name" label="Name" />
+                <FormFieldComponent
+                    name="description"
+                    label="Description (Optional)"
+                    type="text"
+                />
+                {error && (
+                    <h3 id="error" className="text-red-500">
+                        {error}
+                    </h3>
+                )}
+                <Button type="submit" className="m-4 w-fit bg-slate-700">
+                    Create
+                </Button>
+            </form>
+        </Form>
+    );
+}
 
 function Workouts() {
     const [loading, setLoading] = useState(true);
     const [workouts, setWorkouts] = useState<IWorkout[]>([]);
     const [filteredWorkouts, setFilteredWorkouts] = useState<IWorkout[]>([]);
+    const [toggleWorkoutForm, setToggleWorkoutForm] = useState(false);
     let timeout: NodeJS.Timeout;
 
     useEffect(() => {
         document.title = 'Fitnexp - Workouts';
 
-        axios
-            .get(`${import.meta.env.VITE_SERVER_URI}/api/workouts`, {
-                withCredentials: true,
-            })
-            .then((res) => {
-                setWorkouts(res.data.workouts);
-                setFilteredWorkouts(res.data.workouts);
-            })
-            .then(() => setLoading(false));
-    }, []);
+        if (workouts.length === 0) {
+            axios
+                .get(`${import.meta.env.VITE_SERVER_URI}/api/workouts`, {
+                    withCredentials: true,
+                })
+                .then((res) => {
+                    setWorkouts(res.data.workouts);
+                    setFilteredWorkouts(res.data.workouts);
+                })
+                .then(() => setLoading(false));
+        }
+    }, [workouts]);
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         clearTimeout(timeout);
@@ -128,7 +195,22 @@ function Workouts() {
                 title={'Workouts'}
                 onChange={onChange}
                 placeholder={'Core Strength'}
-            />
+            >
+                <div className="fixed left-0 top-0 z-50 w-full bg-white md:top-16 xl:sticky xl:top-0">
+                    {' '}
+                    <button
+                        className={`border-1 m-4 w-fit rounded border ${toggleWorkoutForm ? 'border-slate-700 bg-slate-700 text-white' : 'border-black bg-slate-200 text-black'} px-4 py-2`}
+                        onClick={() => {
+                            setToggleWorkoutForm(!toggleWorkoutForm);
+                        }}
+                    >
+                        Add Workout
+                    </button>
+                    {toggleWorkoutForm && (
+                        <AddWorkoutForm setWorkouts={setWorkouts} />
+                    )}
+                </div>
+            </PageHeader>
             {loading ? listSkeletons() : listWorkouts(filteredWorkouts)}
         </div>
     );
