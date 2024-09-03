@@ -85,11 +85,41 @@ function Workout() {
     const [loading, setLoading] = useState(true);
     const [exercises, setExercises] = useState<IExercise[]>([]);
     const [filteredExercises, setFilteredExercises] = useState<IExercise[]>([]);
+    const [error, setError] = useState(false);
+
     let timeout: NodeJS.Timeout;
 
     const navigate = useNavigate();
 
     const { workout } = location.state;
+
+    useEffect(() => {
+        if (completedExercises) {
+            for (const completedExercise of completedExercises) {
+                if (
+                    typeof completedExercise[0].rest !== 'number' ||
+                    completedExercise[0].rest < 1
+                ) {
+                    setError(true);
+                    return;
+                }
+                for (const set of completedExercise[0].sets) {
+                    if (
+                        typeof set.repetitions !== 'number' ||
+                        set.repetitions < 1
+                    ) {
+                        setError(true);
+                        return;
+                    }
+                    if (typeof set.weight !== 'number' || set.weight < 1) {
+                        setError(true);
+                        return;
+                    }
+                }
+            }
+            setError(false);
+        }
+    }, [completedExercises]);
 
     useEffect(() => {
         document.title = 'Fitnexp - Workout';
@@ -256,13 +286,19 @@ function Workout() {
                                 {workout.description}
                             </h2>
                             <button
-                                className={`mt-2 w-fit rounded ${completedExercises !== null && completedExercises.length > 0 ? 'bg-slate-700' : 'bg-slate-300'} px-4 py-2 text-white`}
-                                onClick={() =>
-                                    handleStartWorkout(
-                                        workout.exercises,
-                                        completedExercises,
-                                    )
-                                }
+                                className={`mt-2 w-fit rounded ${completedExercises !== null && completedExercises.length > 0 && error === false ? 'bg-slate-700' : 'cursor-default bg-slate-300'} px-4 py-2 text-white`}
+                                onClick={() => {
+                                    if (
+                                        completedExercises !== null &&
+                                        completedExercises.length > 0 &&
+                                        error === false
+                                    ) {
+                                        handleStartWorkout(
+                                            workout.exercises,
+                                            completedExercises,
+                                        );
+                                    }
+                                }}
                             >
                                 Start Workout
                             </button>
