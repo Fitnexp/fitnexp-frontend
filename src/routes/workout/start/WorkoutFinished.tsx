@@ -14,7 +14,7 @@ function WorkoutFinished({
 
     exercises.forEach((exercise) => {
         exercise.completedExercise?.sets.forEach((set) => {
-            totalKilogramsLifted += set.weight;
+            totalKilogramsLifted += set.weight * set.repetitions;
             totalRepetitionsDone += set.repetitions;
         });
     });
