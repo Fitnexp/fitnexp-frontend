@@ -93,31 +93,35 @@ function Workout() {
 
     const { workout } = location.state;
 
-    useEffect(() => {
-        if (completedExercises) {
-            for (const completedExercise of completedExercises) {
+    function validateCompletedExercises(
+        completedExercises: ICompletedExercise[][],
+    ) {
+        for (const completedExercise of completedExercises) {
+            if (
+                typeof completedExercise[0].rest !== 'number' ||
+                completedExercise[0].rest < 1
+            ) {
+                return true;
+            }
+            for (const set of completedExercise[0].sets) {
                 if (
-                    typeof completedExercise[0].rest !== 'number' ||
-                    completedExercise[0].rest < 1
+                    typeof set.repetitions !== 'number' ||
+                    set.repetitions < 1
                 ) {
-                    setError(true);
-                    return;
+                    return true;
                 }
-                for (const set of completedExercise[0].sets) {
-                    if (
-                        typeof set.repetitions !== 'number' ||
-                        set.repetitions < 1
-                    ) {
-                        setError(true);
-                        return;
-                    }
-                    if (typeof set.weight !== 'number' || set.weight < 1) {
-                        setError(true);
-                        return;
-                    }
+                if (typeof set.weight !== 'number' || set.weight < 1) {
+                    return true;
                 }
             }
-            setError(false);
+        }
+        return false;
+    }
+
+    useEffect(() => {
+        if (completedExercises) {
+            const hasError = validateCompletedExercises(completedExercises);
+            setError(hasError);
         }
     }, [completedExercises]);
 
