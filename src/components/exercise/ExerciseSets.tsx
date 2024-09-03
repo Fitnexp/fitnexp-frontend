@@ -8,7 +8,67 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { Pencil, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+function changeSetValue({
+    completedExercise,
+    completedExercises,
+    setCompletedExercises,
+    position,
+    index,
+    event,
+    type,
+}: {
+    readonly completedExercise: ICompletedExercise;
+    readonly completedExercises: ICompletedExercise[][];
+    readonly setCompletedExercises: React.Dispatch<
+        React.SetStateAction<ICompletedExercise[][] | null>
+    >;
+    readonly position: number;
+    readonly index: number;
+    readonly event: React.ChangeEvent<HTMLInputElement>;
+    readonly type: 'weight' | 'repetitions' | 'rest';
+}) {
+    const updatedExercises = completedExercises.map((exercise, i) => {
+        if (type === 'rest') {
+            if (i === position) {
+                return [
+                    {
+                        ...completedExercise,
+                        rest: Number(event.target.value),
+                    },
+                ];
+            }
+            return exercise;
+        }
+        if (i === position) {
+            return [
+                {
+                    ...completedExercise,
+                    sets: completedExercise.sets.map((set, j) => {
+                        if (j === index) {
+                            if (type === 'weight') {
+                                return {
+                                    ...set,
+                                    weight: Number(event.target.value),
+                                };
+                            }
+                            if (type === 'repetitions') {
+                                return {
+                                    ...set,
+                                    repetitions: Number(event.target.value),
+                                };
+                            }
+                        }
+                        return set;
+                    }),
+                },
+            ];
+        }
+        return exercise;
+    });
+    setCompletedExercises(updatedExercises);
+}
 
 function handleAddSet({
     completedExercise,
@@ -46,7 +106,6 @@ function handleAddSet({
         }
         return exercise;
     });
-
     // Update the state with the new array
     setCompletedExercises(updatedExercises);
 }
@@ -95,6 +154,33 @@ function handleDeleteSet({
     setCompletedExercises(updatedExercises);
 }
 
+function checkErrors({
+    completedExercise,
+    setError,
+}: {
+    readonly completedExercise: ICompletedExercise;
+    readonly setError: React.Dispatch<React.SetStateAction<string | null>>;
+}) {
+    if (
+        typeof completedExercise.rest !== 'number' ||
+        completedExercise.rest < 1
+    ) {
+        setError('Invalid rest value');
+        return;
+    }
+    for (const set of completedExercise.sets) {
+        if (typeof set.repetitions !== 'number' || set.repetitions < 1) {
+            setError('Invalid repetitions value');
+            return;
+        }
+        if (typeof set.weight !== 'number' || set.weight < 1) {
+            setError('Invalid weight value');
+            return;
+        }
+    }
+    setError(null);
+}
+
 function ExerciseSets({
     completedExercise,
     completedExercises,
@@ -109,6 +195,14 @@ function ExerciseSets({
     readonly position: number | null;
 }) {
     const [edit, setEdit] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (completedExercise) {
+            checkErrors({ completedExercise, setError });
+        }
+    }, [completedExercise, completedExercises, error]);
+
     if (completedExercise) {
         if (
             !completedExercises ||
@@ -154,9 +248,33 @@ function ExerciseSets({
             <>
                 <div className="flex items-center justify-between">
                     {' '}
-                    <h1 className="text-lg">
-                        {completedExercise.rest} seconds rest between sets
-                    </h1>
+                    {edit ? (
+                        <h1 className="text-lg">
+                            <input
+                                name="rest"
+                                type="number"
+                                defaultValue={completedExercise.rest}
+                                className="border-1 w-3/12 rounded-full border border-black px-2 py-1"
+                                min={0}
+                                onBlur={(event) =>
+                                    changeSetValue({
+                                        completedExercise,
+                                        completedExercises,
+                                        setCompletedExercises,
+                                        position,
+                                        index: 0,
+                                        event,
+                                        type: 'rest',
+                                    })
+                                }
+                            />{' '}
+                            seconds rest between sets
+                        </h1>
+                    ) : (
+                        <h1 className="text-lg">
+                            {completedExercise.rest} seconds rest between sets
+                        </h1>
+                    )}
                     <button
                         className={`border-1 rounded-full border ${edit ? 'border-slate-700 bg-slate-700' : 'border-black bg-slate-200'} p-2`}
                         onClick={() => setEdit(!edit)}
@@ -185,12 +303,58 @@ function ExerciseSets({
                             (set: Set, index: number) => (
                                 <TableRow key={crypto.randomUUID()}>
                                     <TableCell>{index + 1}</TableCell>
-                                    <TableCell>{set.weight}</TableCell>
-                                    <TableCell>{set.repetitions}</TableCell>
+                                    <TableCell>
+                                        {edit ? (
+                                            <input
+                                                name="weight"
+                                                type="number"
+                                                defaultValue={set.weight}
+                                                className="border-1 w-full rounded-full border border-black px-2 py-1"
+                                                min={0}
+                                                onBlur={(event) =>
+                                                    changeSetValue({
+                                                        completedExercise,
+                                                        completedExercises,
+                                                        setCompletedExercises,
+                                                        position,
+                                                        index,
+                                                        event,
+                                                        type: 'weight',
+                                                    })
+                                                }
+                                            />
+                                        ) : (
+                                            set.weight
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        {edit ? (
+                                            <input
+                                                name="repetitions"
+                                                type="number"
+                                                defaultValue={set.repetitions}
+                                                className="border-1 w-full rounded-full border border-black px-2 py-1"
+                                                min={0}
+                                                onBlur={(event) =>
+                                                    changeSetValue({
+                                                        completedExercise,
+                                                        completedExercises,
+                                                        setCompletedExercises,
+                                                        position,
+                                                        index,
+                                                        event,
+                                                        type: 'repetitions',
+                                                    })
+                                                }
+                                            />
+                                        ) : (
+                                            set.repetitions
+                                        )}
+                                    </TableCell>
                                     {edit && (
                                         <TableCell className="w-[50px]">
                                             <button
-                                                className={`rounded-full ${completedExercise.sets.length === 1 ? 'bg-slate-300' : 'bg-red-800'} `}
+                                                className={`rounded-full ${completedExercise.sets.length === 1 ? 'cursor-default bg-slate-300' : 'bg-red-800'} `}
                                                 onClick={() =>
                                                     handleDeleteSet({
                                                         completedExercise,
@@ -210,6 +374,7 @@ function ExerciseSets({
                         )}
                     </TableBody>
                 </Table>
+                {error && <p className="font-bold text-red-600">{error}</p>}
                 {edit && (
                     <button
                         className="mx-auto rounded bg-slate-700 px-4 py-2 text-white"
