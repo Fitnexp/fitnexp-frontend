@@ -13,7 +13,7 @@ import FormFieldComponent from '@/components/user/FormFieldComponent';
 import { Button } from '@/components/ui/button';
 
 const formSchema = z.object({
-    name: z.string({ message: 'Email is required' }),
+    name: z.string().min(1, { message: 'Name is required' }),
     description: z.string().optional(),
 });
 
